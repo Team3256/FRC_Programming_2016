@@ -17,7 +17,7 @@ public class OI {
 	private static Joystick joystick1 = new Joystick(RobotMap.Joystick1);
 	private static Joystick joystick2 = new Joystick(RobotMap.Joystick2);
 
-		//Joystick controls for joystick 1
+	//Joystick controls for joystick 1
 		public static Button buttonA1 = new JoystickButton(joystick1, 1);
 		public static Button buttonB1 = new JoystickButton(joystick1, 2);
 		public static Button buttonX1 = new JoystickButton(joystick1, 3);
@@ -37,6 +37,9 @@ public class OI {
 		}
 		public static boolean getButtonRStick1(){
 			return joystick1.getRawButton(10);
+		}
+		public static boolean getButtonRB1(){
+			return joystick1.getRawButton(6);
 		}
 		public static boolean getY1() {return joystick1.getRawButton(4);}
 		public static boolean getRightBumper1(){return joystick1.getRawButton(6);}

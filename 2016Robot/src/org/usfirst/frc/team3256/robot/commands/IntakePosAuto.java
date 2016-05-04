@@ -24,7 +24,7 @@ public class IntakePosAuto extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Intake.incrementOut(.3);
+    	Intake.incrementOut(.45);
     }
 
     // Make this return true when this Command no longer needs to run execute()

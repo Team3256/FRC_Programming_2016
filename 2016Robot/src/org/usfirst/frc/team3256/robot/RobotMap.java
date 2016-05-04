@@ -20,12 +20,14 @@ public class RobotMap {
 //-------------------------------PWM-------------------------------
 	//motors
 	public static final int leftFrontMotor = 0;
-	public static final int leftRearMotor = 1;
+	public static final int leftRearMotor = 6;
 	public static final int	rightFrontMotor = 2;
 	public static final int	rightRearMotor = 3;
 	public static final int	intakePivotMotors = 8;
 	public static final int	intakeRollerMotor = 7;
-	public static final int	winchMotors = 6;
+	//switched with leftFrontMotor (1=old leftRearMotor)
+	
+	public static final int	winchMotors = 1;
 	public static final int	hangerPivotMotors = 4;
 	public static final int catapultWinch = 5;
 			
@@ -57,10 +59,11 @@ public class RobotMap {
 	public static final int ShifterOut = 4;
 	public static final int winchEngage = 1;
 	public static final int winchDisengage = 6;
-	public static final int ballHolderEngage = 2;
-	public static final int ballHolderDisengage = 5;
-	public static final int hangerHolderEngage = 0;
-	public static final int hangerHolderDisengage = 7;
+	//ballHolder and HangerHolder were swapped
+	public static final int ballHolderEngage = 0;
+	public static final int ballHolderDisengage = 7;
+	public static final int hangerHolderEngage = 2;
+	public static final int hangerHolderDisengage = 5;
 	
 	//relays
 	public static final int SpikePort = 0;

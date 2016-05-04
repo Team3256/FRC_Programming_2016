@@ -34,8 +34,8 @@ public class DriveTrain extends PIDSubsystem {
 	static double ticksPerRotationLowGear = 6400; //encoder is 256 ticks/rotations, 1920 old
 	static double ticksPerRotationHighGear = 101.86; 
 		
-    private static final double P = (1),
-    	I = 1,
+    private static final double P = 1.0,
+    	I = 0.0,
     	D = 0.0;
 	
 	// Initialize your subsystem here
@@ -112,12 +112,12 @@ public class DriveTrain extends PIDSubsystem {
     
     //gets right encoder value
     public static double getRightEncoder(){
-		return rightEncoder.get();
+		return Math.abs(rightEncoder.get());
     }
     
     //gets left encoder value
     public static double getLeftEncoder(){
-    	return leftEncoder.get();
+    	return Math.abs(leftEncoder.get());
     }
     
     //resets encoders
@@ -125,13 +125,22 @@ public class DriveTrain extends PIDSubsystem {
     	rightEncoder.reset();
     	leftEncoder.reset();
     }
-   public static double inchesToTicksLG(double distance){
+    //dont use these 2, probably wrong
+    public static double inchesToTicksLG(double distance){
     	return (distance/(6*pi)*ticksPerRotationLowGear);
     }
-   public static double inchesToTicksHG(double distance){
-	   return (distance/(6*pi)*ticksPerRotationHighGear);
-   }
+    public static double inchesToTicksHG(double distance){
+	    return (distance/(6*pi)*ticksPerRotationHighGear);
+    }
+    ////////////////////
+   
+    public static double inchesToTicks(double distance){
+	    return (distance*101.68);
+    }
     
+    public static double ticksToInches(double ticks){
+	    return (ticks/101.68);
+    }
     
     //tankdrive
     public static void tankDrive(double left, double right){

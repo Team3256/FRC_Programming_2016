@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class MoveFoward extends Command {
 	double error;
+	double parameter;
 	double time_initial;
 	double time_current;
 	double speed;
@@ -32,11 +33,13 @@ public class MoveFoward extends Command {
 	MotionProfileController rightDriveStraight;
 	int step=0;
 
-	public MoveFoward(double error) {
+	public MoveFoward(double error, double parameter) {
 		// Use requires() here to declare subsystem dependencies
 		// eg. requires(chassis);
 		requires(Robot.drivetrain);
 		this.error = error;
+		this.parameter = parameter;
+		
 	}
 
 	// Called just before this Command runs the first time
@@ -55,14 +58,14 @@ public class MoveFoward extends Command {
 		rightTrajectory = rightTrajectoryGenerator.getTrajectory();
 		System.out.println(leftTrajectory.length);
 		System.out.println(rightTrajectory.length);
-		//System.out.println(leftTrajectoryGenerator.getTimeTotal());
+		System.out.println(leftTrajectoryGenerator.getTimeTotal());
 		DriveTrain.resetEncoders();
 		//DriveTrain.resetGyro();
 		time_initial = Timer.getFPGATimestamp();
 		DriveTrain.shiftUp();
 		//System.out.println(leftTrajectory.length);
 		leftDriveStraight = new MotionProfileController(leftTrajectory, 12.0, 0.01, 0.0, 0.0,0.0);
-		rightDriveStraight = new MotionProfileController(rightTrajectory, 11.75, 0.01, 0.0, 0.0,0.0);
+		rightDriveStraight = new MotionProfileController(rightTrajectory, 11.5, 0.01, 0.0, 0.0,0.0);
 		step=0;
 	}
 
@@ -77,8 +80,8 @@ public class MoveFoward extends Command {
 		if (right_speed < 0.0){
 			right_speed = 0.0;
 		}
-		DriveTrain.setLeftMotorSpeed(-left_speed);
-		DriveTrain.setRightMotorSpeed(right_speed);
+		DriveTrain.setLeftMotorSpeed(-parameter*right_speed);
+		DriveTrain.setRightMotorSpeed(parameter*left_speed);
 		step++;
 		/*time_current = Timer.getFPGATimestamp() - time_initial;
     	pos_current = ((Math.abs(DriveTrain.getLeftEncoder())+Math.abs(DriveTrain.getRightEncoder()))/2);

@@ -20,7 +20,7 @@ public class ShootnLoad extends CommandGroup {
     	
     	setInterruptible(false);
     	addSequential(new DisengageBallActuators());
-    	addParallel (new ShiftDown());
+    	addSequential (new ShiftDown());
     	addSequential(new ShootBall());
     	addSequential(new ReEngageWinch());
     	addParallel (new ShiftUp());
@@ -30,7 +30,7 @@ public class ShootnLoad extends CommandGroup {
         // use addParallel()
         // e.g. addParallel(new Command1());
         //      addSequential(new Command2());
-        // Command1 and Command2 will run in parallel.
+        // Command1 and Command2 will run in parallel
 
         // A command group will require all of the subsystems that each member
         // would require.
