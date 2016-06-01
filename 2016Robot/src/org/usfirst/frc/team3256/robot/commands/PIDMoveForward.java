@@ -11,11 +11,12 @@ import edu.wpi.first.wpilibj.command.Command;
 public class PIDMoveForward extends Command {
 	
 	double Pos;
+	
     public PIDMoveForward(double Pos) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.drivetrain);
-    	this.Pos = DriveTrain.inchesToTicks(Pos);
+    	this.Pos = Pos;
     	setInterruptible(false);
     }
 
@@ -29,7 +30,7 @@ public class PIDMoveForward extends Command {
     protected void execute() {
     	Robot.drivetrain.setSetpoint(Pos);
     	System.out.println("Setpoint" + Robot.drivetrain.getSetpoint());
-    	System.out.println("CurrentL"+ DriveTrain.getRightEncoder());    	
+    	System.out.println("CurrentR"+ DriveTrain.getRightEncoder());    	
     }
 
     // Make this return true when this Command no longer needs to run execute()

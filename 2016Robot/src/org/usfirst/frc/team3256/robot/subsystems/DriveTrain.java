@@ -31,10 +31,9 @@ public class DriveTrain extends PIDSubsystem {
 	
 	static double pi = 3.1415926535897932384626;
 	static double robotTrack = 24.383;
-	static double ticksPerRotationLowGear = 6400; //encoder is 256 ticks/rotations, 1920 old
-	static double ticksPerRotationHighGear = 101.86; 
+	static double ticksPerRotation = 101.86; 
 		
-    private static final double P = 1.0,
+    private static final double P = 0.012,
     	I = 0.0,
     	D = 0.0;
 	
@@ -42,9 +41,8 @@ public class DriveTrain extends PIDSubsystem {
     public DriveTrain() {
     	//(String Name,P value,I value,D value) all in ticks because we're using encoder
     	super("DriveTrain", P, I, D);	
-    	setAbsoluteTolerance(0.2);
-    	getPIDController().setContinuous(false);
-    	  	//enable();
+    	setAbsoluteTolerance(1);
+    	getPIDController().setContinuous(true);
         // Use these to get going:
         // setSetpoint() -  Sets where the PID controller should move the system
         //                  to
@@ -90,12 +88,12 @@ public class DriveTrain extends PIDSubsystem {
     
     //shifts to low gear
     public static void shiftDown(){
-    	shifterPancake.set(DoubleSolenoid.Value.kForward);
+    	shifterPancake.set(DoubleSolenoid.Value.kReverse);
     }
     
     //shifts to high gear
     public static void shiftUp(){
-    	shifterPancake.set(DoubleSolenoid.Value.kReverse);
+    	shifterPancake.set(DoubleSolenoid.Value.kForward);
     }
     
     //sets left sides motor power
@@ -127,10 +125,10 @@ public class DriveTrain extends PIDSubsystem {
     }
     //dont use these 2, probably wrong
     public static double inchesToTicksLG(double distance){
-    	return (distance/(6*pi)*ticksPerRotationLowGear);
+    	return (distance/(6*pi)*ticksPerRotation);
     }
     public static double inchesToTicksHG(double distance){
-	    return (distance/(6*pi)*ticksPerRotationHighGear);
+	    return (distance/(6*pi)*ticksPerRotation);
     }
     ////////////////////
    
@@ -282,8 +280,7 @@ public class DriveTrain extends PIDSubsystem {
         // Return your input value for the PID loop
         // e.g. a sensor, like a potentiometer:
         // yourPot.getAverageVoltage() / kYourMaxVoltage;
-    	return Math.abs(rightEncoder.get());
-    	
+    	return ticksToInches(rightEncoder.get());	
     }
     
     protected void usePIDOutput(double output) {

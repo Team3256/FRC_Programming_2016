@@ -8,8 +8,7 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Shooter extends Subsystem{
-	
-	
+
 	static VictorSP catapultWinch = new VictorSP(RobotMap.catapultWinch);
 	static DoubleSolenoid winchActuator = new DoubleSolenoid(RobotMap.winchEngage, RobotMap.winchDisengage);
 	static DoubleSolenoid ballActuator = new DoubleSolenoid(RobotMap.ballHolderEngage, RobotMap.ballHolderDisengage);

@@ -4,10 +4,8 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class WaitCommand extends Command{
 
-	double time;
 	
 	public WaitCommand (double time){
-
 		setTimeout(time);
 	}
 	
@@ -21,12 +19,10 @@ public class WaitCommand extends Command{
 		
 	}
 
-
 	protected boolean isFinished() {
 		// TODO Auto-generated method stub
 		return isTimedOut();
 	}
-
 
 	protected void end() {
 		// TODO Auto-generated method stub

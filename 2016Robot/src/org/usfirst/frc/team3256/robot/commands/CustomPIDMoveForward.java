@@ -16,19 +16,23 @@ public class CustomPIDMoveForward extends Command {
 	double inches;
 	double ticks;
 	PID pid;
+	double kP, kI, kD;
 	
-    public CustomPIDMoveForward(double inches) {
+    public CustomPIDMoveForward(double inches, double kP, double kI, double kD) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires (Robot.drivetrain);
     	this.inches = inches;
+    	this.kP = kP;
+    	this.kI = kI;
+    	this.kD = kD;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	DriveTrain.resetEncoders();
     	DriveTrain.shiftUp();
-    	pid = new PID(0.05,0,0);
+    	pid = new PID(kP,kI,kD);
     }
 
     // Called repeatedly when this Command is scheduled to run

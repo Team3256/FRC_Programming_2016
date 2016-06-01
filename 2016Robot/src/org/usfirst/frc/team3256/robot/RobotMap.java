@@ -21,14 +21,13 @@ public class RobotMap {
 	//motors
 	public static final int leftFrontMotor = 0;
 	public static final int leftRearMotor = 6;
-	public static final int	rightFrontMotor = 2;
+	public static final int	rightFrontMotor = 2;//used to be port 2, then port 4;
 	public static final int	rightRearMotor = 3;
 	public static final int	intakePivotMotors = 8;
 	public static final int	intakeRollerMotor = 7;
 	//switched with leftFrontMotor (1=old leftRearMotor)
 	
 	public static final int	winchMotors = 1;
-	public static final int	hangerPivotMotors = 4;
 	public static final int catapultWinch = 5;
 			
 //--------------------------------DIO-------------------------------

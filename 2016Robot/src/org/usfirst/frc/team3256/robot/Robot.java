@@ -1,27 +1,18 @@
 package org.usfirst.frc.team3256.robot;
 
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.networktables2.type.*;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.vision.AxisCamera;
-import edu.wpi.first.wpilibj.vision.USBCamera;
 
 import org.usfirst.frc.team3256.robot.subsystems.DriveTrain;
-import org.usfirst.frc.team3256.robot.subsystems.Hanger;
 import org.usfirst.frc.team3256.robot.subsystems.Intake;
 import org.usfirst.frc.team3256.robot.subsystems.Shooter;
-
-import com.ni.vision.NIVision;
-import com.ni.vision.NIVision.Image;
 
 import org.usfirst.frc.team3256.robot.commands.*;
 import org.usfirst.frc.team3256.robot.RobotMap;
@@ -37,21 +28,12 @@ public class Robot extends IterativeRobot {
 
 	public static DriveTrain drivetrain;
 	public static Compressor compressor;
-	public static Hanger hanger;
 	public static Intake intake;
 	public static Shooter shooter;
 	public static NetworkTable networkTable;
 	public static SmartDashboard smartdashboard;
 	public static double[] roboRealmData;
-	
-	int currSession;
-	int sessionIntake;
-	int sessionShooter;
-	Image frame;
-	
-	//Axis Camera
-	//AxisCamera shooterCam = new AxisCamera(RobotMap.shooterCameraIP);
-
+		
     Command autonomousCommand;
 	
     //DriveTrain
@@ -106,33 +88,17 @@ public class Robot extends IterativeRobot {
     	networkTable.initialize();
 		drivetrain.resetEncoders();
 		
-		/*
-		frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-		sessionShooter = NIVision.IMAQdxOpenCamera("cam2", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-		sessionIntake = NIVision.IMAQdxOpenCamera("cam3", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-		currSession = sessionShooter;
-		NIVision.IMAQdxConfigureGrab(currSession);
-		*/
-		
-		CameraServer server = CameraServer.getInstance();
-		server.setQuality(50);
-		server.startAutomaticCapture("cam3");
-		
-		//USBCamera cam1 = new USBCamera();
-		//cam1.startCapture();
-    	
-    	//subsystems
+		//subsystems
     	drivetrain = new DriveTrain();
 		compressor = new Compressor(0);
-		hanger = new Hanger();
 		intake = new Intake();
 		shooter = new Shooter();
 		
 	    //commands
 		FullSpeed = new FullSpeed();
 		StopDrive = new StopDrive();
-		MoveForward = new MoveFoward(60,1);
-		PIDMoveForward = new PIDMoveForward(60);
+		MoveForward = new MoveFoward(90,1);
+		PIDMoveForward = new PIDMoveForward(90);
 		ShiftUp = new ShiftUp();
 		ShiftDown = new ShiftDown();
 		IntakeIncrementIn = new IntakeIncrementIn();
@@ -155,7 +121,7 @@ public class Robot extends IterativeRobot {
 		AutoLowBar = new AutoLowBar();
 		AutoNonLowBar = new AutoNonLowBar();
 		AutoLowerIntake = new AutoLowerIntake();
-		CustomPIDMoveForward = new CustomPIDMoveForward(60);
+		CustomPIDMoveForward = new CustomPIDMoveForward(50, 1.0, 0.0, 0.0);
 		TurnTest = new TurnTest();
 		PIDAutoTurn = new PIDAutoTurn();
 		PIDTurn = new PIDTurn(45);
@@ -164,25 +130,15 @@ public class Robot extends IterativeRobot {
 		compressor.setClosedLoopControl(true);
 		
 		AutoChooser = new SendableChooser();
-				
-		//initialize gyro
-		drivetrain.initGyro();
-        drivetrain.calibrateGyro();
     }
-	
+
 	public void disabledPeriodic() {
 		AutoChooser.addDefault("AutoDoNothing", AutoDoNothingCommand);
 		AutoChooser.addObject("AutoLowBar", AutoLowBar);
 		AutoChooser.addObject("AutoNonLowBar", AutoNonLowBar);
 		AutoChooser.addObject("AutoLowerIntake", AutoLowerIntake);
-		AutoChooser.addObject("DriveTest", MoveForward);
-		//AutoChooser.addObject("MoveForward", AutoDriveForward);
-		//AutoChooser.addObject("MotionProfilingDriveForward", MoveForward);
 		AutoChooser.addObject("CustomPIDMoveForward", CustomPIDMoveForward);
 		AutoChooser.addObject("PIDMoveForward", PIDMoveForward);
-		//AutoChooser.addObject("TurnTest", TurnTest);
-		//AutoChooser.addObject("PIDTurnTest", PIDAutoTurn);
-		//AutoChooser.addObject("TurnPID", PIDTurn);
 		smartdashboard.putData("Auto Mode Chooser", AutoChooser);
 		Scheduler.getInstance().run();
 	}
@@ -191,9 +147,7 @@ public class Robot extends IterativeRobot {
 	   	AutoChooser.initTable(AutoChooser.getTable());
 	   	AutoCommand = (Command) AutoChooser.getSelected();
 	   	AutoCommand.start();
-	   	
-	   //	drivetrain.enable();
-	   	drivetrain.disable();
+	   	drivetrain.enable();
 	   	intake.enable();
 	    drivetrain.resetEncoders();
 	   	drivetrain.shiftUp();
@@ -203,10 +157,9 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-    	RobotMap.CamAngle = SmartDashboard.getNumber("CameraAngle", 0);
-        RobotMap.CamDirection = SmartDashboard.getNumber("Direction", 0);
+    	//RobotMap.CamAngle = SmartDashboard.getNumber("CameraAngle", 0);
+        //RobotMap.CamDirection = SmartDashboard.getNumber("Direction", 0);
         Scheduler.getInstance().run();
-        
     }
 
     public void teleopInit() {
@@ -217,11 +170,10 @@ public class Robot extends IterativeRobot {
         //if (autonomousCommand != null) autonomousCommand.cancel();
  
         Intake.stopIntake();
-        drivetrain.resetGyro();
         drivetrain.resetEncoders();
         drivetrain.disable();
-        intake.enable();
-        
+        drivetrain.resetGyro();
+        //intake.enable();
         //Shooter.disengageBallActuators();
         //Shooter.engageWinch();
         
@@ -240,7 +192,8 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        
+        System.out.println("LENC:" + drivetrain.getLeftEncoder() + "         " + "RENC" + drivetrain.getRightEncoder());
+
 /*-----------------------------------------Operator Controls-----------------------------------------*/
         //Drivetrain
         //Arcade drive with reversible toggle
@@ -268,7 +221,7 @@ public class Robot extends IterativeRobot {
         //OI.leftBumper2.whenPressed(CatapultWinchAutomatic);
         
      	//Automatic Ball Actuators
-        System.out.println("isWinched " + Shooter.isWinched());
+     //   System.out.println("isWinched " + Shooter.isWinched());
         //if (Shooter.isWinched() && !ShootnLoad.isRunning())
         	OI.leftBumper2.whenPressed(EngageBallActuators);
         	//Scheduler.getInstance().add(EngageBallActuators);
@@ -296,26 +249,9 @@ public class Robot extends IterativeRobot {
         RobotMap.photoCenterOfGravityX = networkTable.getNumber("COG_X", 0.0);
 		RobotMap.photoCenterOfGravityY = networkTable.getNumber("COG_Y", 0.0);
     	
-		
-		System.out.println("isWinched: " + Shooter.isWinched() + "--isLoaded: " + Shooter.isLoaded() + " /////////");
+		//System.out.println("isWinched: " + Shooter.isWinched() + "--isLoaded: " + Shooter.isLoaded() + " /////////");
 		//System.out.println("leftIntake: " + Intake.isIntakePosL() + "--rightIntake: " + Intake.isIntakePosR());
-		
-		//Camera Switching
-		/*
-		if (OI.getButtonRB1()){			
-			NIVision.IMAQdxStopAcquisition(currSession);
-			currSession = sessionIntake;
-			NIVision.IMAQdxConfigureGrab(currSession);
-		}
-		else{
-			NIVision.IMAQdxStopAcquisition(currSession);
-			currSession = sessionShooter;
-			NIVision.IMAQdxConfigureGrab(currSession);
-		}
-		
-		NIVision.IMAQdxGrab(currSession, frame, 1);
-		server.setImage(frame);
-    	*/
+
     }
     
     /**
