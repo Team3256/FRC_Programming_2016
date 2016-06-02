@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.usfirst.frc.team3256.robot.MotionProfileController;
-import org.usfirst.frc.team3256.robot.PID;
-import org.usfirst.frc.team3256.robot.PIDController;
 import org.usfirst.frc.team3256.robot.Robot;
 import org.usfirst.frc.team3256.robot.Segment;
 import org.usfirst.frc.team3256.robot.TrajectoryGenerator;

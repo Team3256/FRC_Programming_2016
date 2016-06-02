@@ -4,10 +4,9 @@ import org.usfirst.frc.team3256.robot.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj.Timer;
 
-public class PIDController {
+public class MotionProfilingTest {
 
-
-	public PIDController(){
+	public MotionProfilingTest(){
 
 	}
 	static double time_total;

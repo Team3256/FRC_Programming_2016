@@ -1,55 +1,66 @@
 package org.usfirst.frc.team3256.robot.subsystems;
-import edu.wpi.first.wpilibj.command.PIDSubsystem;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-
 import org.usfirst.frc.team3256.robot.RobotMap;
-
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.buttons.Button;
-/**
- *
- */
-public class DriveTrain extends PIDSubsystem {
-	//Check port numbers in RobotMap
+import edu.wpi.first.wpilibj.command.Subsystem;
+
+public class DriveTrain extends Subsystem {
 	static VictorSP leftFront = new VictorSP(RobotMap.leftFrontMotor); 
 	static VictorSP leftRear = new VictorSP(RobotMap.leftRearMotor);
 	static VictorSP rightFront = new VictorSP(RobotMap.rightFrontMotor);
 	static VictorSP rightRear = new VictorSP(RobotMap.rightRearMotor);
-	
 	static Encoder rightEncoder = new Encoder(RobotMap.rightDriveEncoderA, RobotMap.rightDriveEncoderB);
 	static Encoder leftEncoder = new Encoder(RobotMap.leftDriveEncoderA, RobotMap.leftDriveEncoderB);
-	
 	static DoubleSolenoid shifterPancake = new DoubleSolenoid (RobotMap.ShifterIn,RobotMap.ShifterOut);
-	
 	static AnalogGyro gyro = new AnalogGyro(RobotMap.gyroPort);
 	
-	static double pi = 3.1415926535897932384626;
 	static double robotTrack = 24.383;
-	static double ticksPerRotation = 101.86; 
-		
-    private static final double P = 0.012,
-    	I = 0.0,
-    	D = 0.0;
-	
+	static double ticksPerRotation = 101.86;
+	private PIDOutput Driveoutput = new PIDOutput() {
+		public void pidWrite(double output) {
+			useDrivePIDOutput(output);
+	    }
+	  };
+	  private PIDSource Drivesource = new PIDSource() {
+		  public void setPIDSourceType(PIDSourceType pidSource) {}
+
+		  public PIDSourceType getPIDSourceType() {
+			  return PIDSourceType.kDisplacement;
+		  }
+
+		  public double pidGet() {
+			  return returnDrivePIDInput();
+		  }
+	  };
+	 PIDController Drivecontroller = new PIDController(0.011,0.0,0.025,1/12,Drivesource,Driveoutput);
+	 private PIDOutput Turnoutput = new PIDOutput() {
+			public void pidWrite(double output) {
+				useDrivePIDOutput(output);
+		    }
+		  };
+		  private PIDSource Turnsource = new PIDSource() {
+			  public void setPIDSourceType(PIDSourceType pidSource) {}
+
+			  public PIDSourceType getPIDSourceType() {
+				  return PIDSourceType.kDisplacement;
+			  }
+
+			  public double pidGet() {
+				  return returnDrivePIDInput();
+			  }
+		  };
+	  PIDController Turncontroller = new PIDController(0.011,0.0,0.025,1/12,Drivesource,Driveoutput);
 	// Initialize your subsystem here
     public DriveTrain() {
-    	//(String Name,P value,I value,D value) all in ticks because we're using encoder
-    	super("DriveTrain", P, I, D);	
-    	setAbsoluteTolerance(1);
-    	getPIDController().setContinuous(true);
-        // Use these to get going:
-        // setSetpoint() -  Sets where the PID controller should move the system
-        //                  to
-        // enable() - Enables the PID controller.
     }
-    
-    public void initDefaultCommand() {
+
+	public void initDefaultCommand() {
         // Set the default command for a subsystem here.
         //setDefaultCommand(new MySpecialCommand());
     }
@@ -123,15 +134,7 @@ public class DriveTrain extends PIDSubsystem {
     	rightEncoder.reset();
     	leftEncoder.reset();
     }
-    //dont use these 2, probably wrong
-    public static double inchesToTicksLG(double distance){
-    	return (distance/(6*pi)*ticksPerRotation);
-    }
-    public static double inchesToTicksHG(double distance){
-	    return (distance/(6*pi)*ticksPerRotation);
-    }
-    ////////////////////
-   
+
     public static double inchesToTicks(double distance){
 	    return (distance*101.68);
     }
@@ -139,7 +142,9 @@ public class DriveTrain extends PIDSubsystem {
     public static double ticksToInches(double ticks){
 	    return (ticks/101.68);
     }
-    
+    public static double degreesToTicks(double degrees){
+    	return inchesToTicks(robotTrack*degrees/360);
+    }
     //tankdrive
     public static void tankDrive(double left, double right){
     	//clipping values
@@ -212,27 +217,7 @@ public class DriveTrain extends PIDSubsystem {
     		rightRear.set(-right);
     	}
     }
-    
-    public static boolean turnToGoal(double angle, double direction){
-    	if (angle <= 1){
-    		setLeftMotorSpeed(0);
-    		setRightMotorSpeed(0);
-    		return true;
-    	}
-    	else{
-    		if (direction == 1){
-    			setLeftMotorSpeed(0.25);
-    			setRightMotorSpeed(0.25);
-    		}
-    		else{
-    			setLeftMotorSpeed(-0.25);
-    			setRightMotorSpeed(-0.25);
-    		}
-    		return false;
-    	}
-    	
-    }
-    
+
     public static void arcadeDriveReverse(double throttle, double turn, boolean slow){
     	if (Math.abs(throttle)<0.2) {
     		throttle = 0;
@@ -273,24 +258,39 @@ public class DriveTrain extends PIDSubsystem {
     }
     
     public static double degreesToInches(double degrees){
-    	return degrees*(robotTrack*pi/360);
+    	return degrees*(robotTrack*Math.PI/360);
     }
   
-    protected double returnPIDInput() {
-        // Return your input value for the PID loop
-        // e.g. a sensor, like a potentiometer:
-        // yourPot.getAverageVoltage() / kYourMaxVoltage;
+    public void setDriveSetpoint(double setpoint) {
+		  Drivecontroller.setSetpoint(setpoint);
+    }
+	
+    public void enableDrivePID() {
+		  Drivecontroller.enable();	
+	}
+	
+    public void disableDrivePID(){
+		  Drivecontroller.disable();
+    }
+	
+    public double getDriveSetpoint() {
+		  return Drivecontroller.getSetpoint();
+    }
+
+	public double getDriveCurrent() {
+		  return returnDrivePIDInput();
+	
+	}
+    protected double returnDrivePIDInput() {
     	return ticksToInches(rightEncoder.get());	
     }
     
-    protected void usePIDOutput(double output) {
-        // Use output to drive your system, like a motor
-        // e.g. yourMotor.set(output);
+    protected void useDrivePIDOutput(double output) {
     	if (output < 0)
     		output = 0;
     	leftFront.pidWrite(output);
-    	rightFront.pidWrite(-output);
-    	leftRear.pidWrite(output );
-    	rightRear.pidWrite(-output);
+    	rightFront.pidWrite(0.96*-output);
+    	leftRear.pidWrite(output);
+    	rightRear.pidWrite(0.96*-output);
     }
 }

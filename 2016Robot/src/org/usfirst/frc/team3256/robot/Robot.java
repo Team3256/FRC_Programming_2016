@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3256.robot;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.vision.USBCamera;
 
 import org.usfirst.frc.team3256.robot.subsystems.DriveTrain;
 import org.usfirst.frc.team3256.robot.subsystems.Intake;
@@ -42,8 +44,6 @@ public class Robot extends IterativeRobot {
     Command MoveForward;
     Command MoveBackward;
     Command PIDMoveForward;
-    Command FullSpeed;
-    Command StopDrive;
 
     //Intake
     Command IntakeIncrementIn;
@@ -61,22 +61,14 @@ public class Robot extends IterativeRobot {
     Command CatapultWinchStop;
     Command EngageBallActuators;
     Command DisengageBallActuators;
-    
-    
     CommandGroup ShootnLoad;
     
     //Autonomous
     Command AutoCommand;
     Command AutoDoNothingCommand;
-    Command CustomPIDMoveForward;
-    Command TurnTest;
-    Command PIDAutoTurn;
     SendableChooser AutoChooser;
     CommandGroup AutoDriveForward;
     CommandGroup AutoLowBar;
-    CommandGroup AutoNonLowBar;
-    CommandGroup AutoLowerIntake;
-    Command PIDTurn;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -88,6 +80,10 @@ public class Robot extends IterativeRobot {
     	networkTable.initialize();
 		drivetrain.resetEncoders();
 		
+		CameraServer USBCam = CameraServer.getInstance();
+		USBCam.setQuality(50);
+		USBCam.startAutomaticCapture("cam2");
+		
 		//subsystems
     	drivetrain = new DriveTrain();
 		compressor = new Compressor(0);
@@ -95,10 +91,8 @@ public class Robot extends IterativeRobot {
 		shooter = new Shooter();
 		
 	    //commands
-		FullSpeed = new FullSpeed();
-		StopDrive = new StopDrive();
 		MoveForward = new MoveFoward(90,1);
-		PIDMoveForward = new PIDMoveForward(90);
+		PIDMoveForward = new PIDMoveForward(150);
 		ShiftUp = new ShiftUp();
 		ShiftDown = new ShiftDown();
 		IntakeIncrementIn = new IntakeIncrementIn();
@@ -119,12 +113,6 @@ public class Robot extends IterativeRobot {
 		AutoDoNothingCommand = new AutoDoNothingCommand();
 		AutoDriveForward = new AutoDriveForward();
 		AutoLowBar = new AutoLowBar();
-		AutoNonLowBar = new AutoNonLowBar();
-		AutoLowerIntake = new AutoLowerIntake();
-		CustomPIDMoveForward = new CustomPIDMoveForward(50, 1.0, 0.0, 0.0);
-		TurnTest = new TurnTest();
-		PIDAutoTurn = new PIDAutoTurn();
-		PIDTurn = new PIDTurn(45);
 		
 		//compressor
 		compressor.setClosedLoopControl(true);
@@ -135,9 +123,6 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		AutoChooser.addDefault("AutoDoNothing", AutoDoNothingCommand);
 		AutoChooser.addObject("AutoLowBar", AutoLowBar);
-		AutoChooser.addObject("AutoNonLowBar", AutoNonLowBar);
-		AutoChooser.addObject("AutoLowerIntake", AutoLowerIntake);
-		AutoChooser.addObject("CustomPIDMoveForward", CustomPIDMoveForward);
 		AutoChooser.addObject("PIDMoveForward", PIDMoveForward);
 		smartdashboard.putData("Auto Mode Chooser", AutoChooser);
 		Scheduler.getInstance().run();
@@ -147,7 +132,7 @@ public class Robot extends IterativeRobot {
 	   	AutoChooser.initTable(AutoChooser.getTable());
 	   	AutoCommand = (Command) AutoChooser.getSelected();
 	   	AutoCommand.start();
-	   	drivetrain.enable();
+	   	drivetrain.enableDrivePID();
 	   	intake.enable();
 	    drivetrain.resetEncoders();
 	   	drivetrain.shiftUp();
@@ -171,7 +156,7 @@ public class Robot extends IterativeRobot {
  
         Intake.stopIntake();
         drivetrain.resetEncoders();
-        drivetrain.disable();
+        //drivetrain.disable();
         drivetrain.resetGyro();
         //intake.enable();
         //Shooter.disengageBallActuators();
