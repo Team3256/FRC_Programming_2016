@@ -9,17 +9,18 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class PIDMoveForward extends Command {
+public class PIDTurn extends Command {
 
-	double Pos;
-	double output;
+	double degrees;
 	PIDController pid;
+	double output;
+	double current_degrees;
 	
-    public PIDMoveForward(double Pos) {
+    public PIDTurn(double degrees) {
     	requires(Robot.drivetrain);
-    	this.Pos=Pos;
+    	this.degrees=degrees;
     	setInterruptible(false);
-    	pid=new PIDController(0.0105,0.0,0.0261);
+    	pid = new PIDController(0.006,0.0005,0.0001);
     }
 
     // Called just before this Command runs the first time
@@ -29,14 +30,15 @@ public class PIDMoveForward extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	output = pid.calculatePID(DriveTrain.ticksToInches(DriveTrain.getRightEncoder()), Pos);
-    	DriveTrain.setLeftMotorSpeed(-output);
+    	current_degrees = DriveTrain.ticksToDegrees(DriveTrain.getRightEncoder());
+    	output = pid.calculatePID(current_degrees, degrees);
+    	DriveTrain.setLeftMotorSpeed(output);
     	DriveTrain.setRightMotorSpeed(output);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return pid.getError(DriveTrain.ticksToInches(DriveTrain.getRightEncoder()), Pos)<1;
+        return pid.getError(current_degrees, degrees)<1;
     }
 
     // Called once after isFinished returns true

@@ -36,14 +36,13 @@ public class Robot extends IterativeRobot {
 	public static SmartDashboard smartdashboard;
 	public static double[] roboRealmData;
 		
-    Command autonomousCommand;
-	
     //DriveTrain
     Command ShiftUp;
     Command ShiftDown;
     Command MoveForward;
     Command MoveBackward;
     Command PIDMoveForward;
+    Command PIDTurn;
 
     //Intake
     Command IntakeIncrementIn;
@@ -92,7 +91,8 @@ public class Robot extends IterativeRobot {
 		
 	    //commands
 		MoveForward = new MoveFoward(90,1);
-		PIDMoveForward = new PIDMoveForward(150);
+		PIDMoveForward = new PIDMoveForward(180);
+		PIDTurn = new PIDTurn(90);
 		ShiftUp = new ShiftUp();
 		ShiftDown = new ShiftDown();
 		IntakeIncrementIn = new IntakeIncrementIn();
@@ -111,7 +111,6 @@ public class Robot extends IterativeRobot {
 		DisengageBallActuators = new DisengageBallActuators();
 		ShootnLoad = new ShootnLoad();
 		AutoDoNothingCommand = new AutoDoNothingCommand();
-		AutoDriveForward = new AutoDriveForward();
 		AutoLowBar = new AutoLowBar();
 		
 		//compressor
@@ -124,6 +123,7 @@ public class Robot extends IterativeRobot {
 		AutoChooser.addDefault("AutoDoNothing", AutoDoNothingCommand);
 		AutoChooser.addObject("AutoLowBar", AutoLowBar);
 		AutoChooser.addObject("PIDMoveForward", PIDMoveForward);
+		AutoChooser.addObject("PIDTurn", PIDTurn);
 		smartdashboard.putData("Auto Mode Chooser", AutoChooser);
 		Scheduler.getInstance().run();
 	}
@@ -132,7 +132,6 @@ public class Robot extends IterativeRobot {
 	   	AutoChooser.initTable(AutoChooser.getTable());
 	   	AutoCommand = (Command) AutoChooser.getSelected();
 	   	AutoCommand.start();
-	   	drivetrain.enableDrivePID();
 	   	intake.enable();
 	    drivetrain.resetEncoders();
 	   	drivetrain.shiftUp();
@@ -156,9 +155,7 @@ public class Robot extends IterativeRobot {
  
         Intake.stopIntake();
         drivetrain.resetEncoders();
-        //drivetrain.disable();
         drivetrain.resetGyro();
-        //intake.enable();
         //Shooter.disengageBallActuators();
         //Shooter.engageWinch();
         
@@ -177,8 +174,8 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        System.out.println("LENC:" + drivetrain.getLeftEncoder() + "         " + "RENC" + drivetrain.getRightEncoder());
-
+        //System.out.println("LENC:" + drivetrain.getLeftEncoder() + "         " + "RENC" + drivetrain.getRightEncoder());
+        //System.out.println("Angle: " + drivetrain.getAngle());
 /*-----------------------------------------Operator Controls-----------------------------------------*/
         //Drivetrain
         //Arcade drive with reversible toggle
@@ -208,7 +205,7 @@ public class Robot extends IterativeRobot {
      	//Automatic Ball Actuators
      //   System.out.println("isWinched " + Shooter.isWinched());
         //if (Shooter.isWinched() && !ShootnLoad.isRunning())
-        	OI.leftBumper2.whenPressed(EngageBallActuators);
+        	OI.buttonA1.whenPressed(PIDTurn);
         	//Scheduler.getInstance().add(EngageBallActuators);
         
         //Intake

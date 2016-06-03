@@ -22,41 +22,7 @@ public class DriveTrain extends Subsystem {
 	
 	static double robotTrack = 24.383;
 	static double ticksPerRotation = 101.86;
-	private PIDOutput Driveoutput = new PIDOutput() {
-		public void pidWrite(double output) {
-			useDrivePIDOutput(output);
-	    }
-	  };
-	  private PIDSource Drivesource = new PIDSource() {
-		  public void setPIDSourceType(PIDSourceType pidSource) {}
-
-		  public PIDSourceType getPIDSourceType() {
-			  return PIDSourceType.kDisplacement;
-		  }
-
-		  public double pidGet() {
-			  return returnDrivePIDInput();
-		  }
-	  };
-	 PIDController Drivecontroller = new PIDController(0.011,0.0,0.025,1/12,Drivesource,Driveoutput);
-	 private PIDOutput Turnoutput = new PIDOutput() {
-			public void pidWrite(double output) {
-				useDrivePIDOutput(output);
-		    }
-		  };
-		  private PIDSource Turnsource = new PIDSource() {
-			  public void setPIDSourceType(PIDSourceType pidSource) {}
-
-			  public PIDSourceType getPIDSourceType() {
-				  return PIDSourceType.kDisplacement;
-			  }
-
-			  public double pidGet() {
-				  return returnDrivePIDInput();
-			  }
-		  };
-	  PIDController Turncontroller = new PIDController(0.011,0.0,0.025,1/12,Drivesource,Driveoutput);
-	// Initialize your subsystem here
+	
     public DriveTrain() {
     }
 
@@ -77,8 +43,8 @@ public class DriveTrain extends Subsystem {
     
     //gets gyro angle
     public static double getAngle(){
-    	double factor = 360.0/350.0;
-    	return gyro.getAngle()*factor;
+    	double factor = 1;
+    	return Math.abs(gyro.getAngle()*factor);
     }
     
     //calibrates gyro
@@ -115,8 +81,8 @@ public class DriveTrain extends Subsystem {
 
     //sets right sides motor power
     public static void setRightMotorSpeed(double speed){
-    	rightFront.set(speed);
-    	rightRear.set(speed);
+    	rightFront.set(0.95*speed);
+    	rightRear.set(0.95*speed);
     }
     
     //gets right encoder value
@@ -142,8 +108,13 @@ public class DriveTrain extends Subsystem {
     public static double ticksToInches(double ticks){
 	    return (ticks/101.68);
     }
+    
     public static double degreesToTicks(double degrees){
-    	return inchesToTicks(robotTrack*degrees/360);
+    	return inchesToTicks(robotTrack*Math.PI*degrees/360);
+    }
+    
+    public static double ticksToDegrees(double ticks){
+    	return ticksToInches(ticks)*360/(24.383*Math.PI);
     }
     //tankdrive
     public static void tankDrive(double left, double right){
@@ -259,38 +230,5 @@ public class DriveTrain extends Subsystem {
     
     public static double degreesToInches(double degrees){
     	return degrees*(robotTrack*Math.PI/360);
-    }
-  
-    public void setDriveSetpoint(double setpoint) {
-		  Drivecontroller.setSetpoint(setpoint);
-    }
-	
-    public void enableDrivePID() {
-		  Drivecontroller.enable();	
-	}
-	
-    public void disableDrivePID(){
-		  Drivecontroller.disable();
-    }
-	
-    public double getDriveSetpoint() {
-		  return Drivecontroller.getSetpoint();
-    }
-
-	public double getDriveCurrent() {
-		  return returnDrivePIDInput();
-	
-	}
-    protected double returnDrivePIDInput() {
-    	return ticksToInches(rightEncoder.get());	
-    }
-    
-    protected void useDrivePIDOutput(double output) {
-    	if (output < 0)
-    		output = 0;
-    	leftFront.pidWrite(output);
-    	rightFront.pidWrite(0.96*-output);
-    	leftRear.pidWrite(output);
-    	rightRear.pidWrite(0.96*-output);
     }
 }
