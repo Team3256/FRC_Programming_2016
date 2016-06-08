@@ -1,5 +1,7 @@
 package org.usfirst.frc.team3256.robot.subsystems;
 import org.usfirst.frc.team3256.robot.RobotMap;
+import org.usfirst.frc.team3256.robot.commands.PIDTurn;
+
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
@@ -43,7 +45,7 @@ public class DriveTrain extends Subsystem {
     
     //gets gyro angle
     public static double getAngle(){
-    	double factor = 1;
+    	double factor = 90/88;
     	return Math.abs(gyro.getAngle()*factor);
     }
     
@@ -51,6 +53,7 @@ public class DriveTrain extends Subsystem {
     public static void calibrateGyro(){
     	gyro.calibrate();
     }
+    
     
     //shift transmissions
     public static void shiftPancake(boolean getRightBumper){
@@ -93,6 +96,10 @@ public class DriveTrain extends Subsystem {
     //gets left encoder value
     public static double getLeftEncoder(){
     	return Math.abs(leftEncoder.get());
+    }
+    
+    public static double getAvgEncoder(){
+    	return Math.abs((leftEncoder.get()+rightEncoder.get())/2);
     }
     
     //resets encoders
@@ -152,80 +159,81 @@ public class DriveTrain extends Subsystem {
     }
     //arcadedrive
     public static void arcadeDrive(double throttle, double turn, boolean slow){
+    		if (Math.abs(throttle)<0.2) {
+	    		throttle = 0;
+	    	}
+	    	if (Math.abs(turn)<0.2) {
+	    		turn = 0;
+	    	}
+	    	
+	    	double left = throttle-turn;
+	    	double right = throttle+turn;
+	    	
+	    	if (left > 1){
+	    		left = 1;
+	    	}
+	    	if (left < -1){
+	    		left = -1;
+	    	}
+	    	if (right > 1){
+	    		right = 1;
+	    	}
+	    	if (right < -1){
+	    		right = -1;
+	    	}
+	    	if (slow){
+	    		leftFront.set(left/2);
+	        	leftRear.set(left/2);
+	        	rightFront.set(-right/2);
+	        	rightRear.set(-right/2);
+	    	}
+	    	else{
+	    		leftFront.set(left);
+	    		leftRear.set(left);
+	    		rightFront.set(-right);
+	    		rightRear.set(-right);
+	    	}
     	
-    	if (Math.abs(throttle)<0.2) {
-    		throttle = 0;
-    	}
-    	if (Math.abs(turn)<0.2) {
-    		turn = 0;
-    	}
-    	
-    	double left = throttle-turn;
-    	double right = throttle+turn;
-    	
-    	if (left > 1){
-    		left = 1;
-    	}
-    	if (left < -1){
-    		left = -1;
-    	}
-    	if (right > 1){
-    		right = 1;
-    	}
-    	if (right < -1){
-    		right = -1;
-    	}
-    	if (slow){
-    		leftFront.set(left/2);
-        	leftRear.set(left/2);
-        	rightFront.set(-right/2);
-        	rightRear.set(-right/2);
-    	}
-    	else{
-    		leftFront.set(left);
-    		leftRear.set(left);
-    		rightFront.set(-right);
-    		rightRear.set(-right);
-    	}
     }
 
     public static void arcadeDriveReverse(double throttle, double turn, boolean slow){
-    	if (Math.abs(throttle)<0.2) {
-    		throttle = 0;
-    	}
-    	if (Math.abs(turn)<0.2) {
-    		turn = 0;
-    	}
-    	throttle = -throttle;
-    	turn = -turn;
-    	
-    	double left = throttle+turn;
-    	double right = throttle-turn;
-    	
-    	if (left > 1){
-    		left = 1;
-    	}
-    	if (left < -1){
-    		left = -1;
-    	}
-    	if (right > 1){
-    		right = 1;
-    	}
-    	if (right < -1){
-    		right = -1;
-    	}
-    	if (slow){
-    		leftFront.set(left/2);
-    		leftRear.set(left/2);
-    		rightFront.set(-right/2);
-    		rightRear.set(-right/2);
-    	}
-    	else {
-    		leftFront.set(left);
-    		leftRear.set(left);
-    		rightFront.set(-right);
-    		rightRear.set(-right);
-    	}
+    		if (Math.abs(throttle)<0.2) {
+	    		throttle = 0;
+	    	}
+	    	if (Math.abs(turn)<0.2) {
+	    		turn = 0;
+	    	}
+	    	throttle = -throttle;
+	    	turn = -turn;
+	    	
+	    	double left = throttle+turn;
+	    	double right = throttle-turn;
+	    	
+	    	if (left > 1){
+	    		left = 1;
+	    	}
+	    	if (left < -1){
+	    		left = -1;
+	    	}
+	    	if (right > 1){
+	    		right = 1;
+	    	}
+	    	if (right < -1){
+	    		right = -1;
+	    	}
+	    	if (slow){
+	    		leftFront.set(left/2);
+	    		leftRear.set(left/2);
+	    		rightFront.set(-right/2);
+	    		rightRear.set(-right/2);
+	    	}
+	    	else {
+	    		leftFront.set(left);
+	    		leftRear.set(left);
+	    		rightFront.set(-right);
+	    		rightRear.set(-right);
+	    	}
+	
     }
     
     public static double degreesToInches(double degrees){

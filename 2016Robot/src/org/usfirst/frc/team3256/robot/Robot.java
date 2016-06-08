@@ -68,6 +68,7 @@ public class Robot extends IterativeRobot {
     SendableChooser AutoChooser;
     CommandGroup AutoDriveForward;
     CommandGroup AutoLowBar;
+    CommandGroup AutoTurnTest;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -77,11 +78,10 @@ public class Robot extends IterativeRobot {
     	System.out.println("Init");
     	networkTable = NetworkTable.getTable("Smartdashboard");
     	networkTable.initialize();
-		drivetrain.resetEncoders();
 		
 		CameraServer USBCam = CameraServer.getInstance();
 		USBCam.setQuality(50);
-		USBCam.startAutomaticCapture("cam2");
+		USBCam.startAutomaticCapture("cam0");
 		
 		//subsystems
     	drivetrain = new DriveTrain();
@@ -112,9 +112,12 @@ public class Robot extends IterativeRobot {
 		ShootnLoad = new ShootnLoad();
 		AutoDoNothingCommand = new AutoDoNothingCommand();
 		AutoLowBar = new AutoLowBar();
+		AutoTurnTest=new AutoTurnTest();
 		
 		//compressor
 		compressor.setClosedLoopControl(true);
+		drivetrain.calibrateGyro();
+		drivetrain.initGyro();
 		
 		AutoChooser = new SendableChooser();
     }
@@ -124,6 +127,7 @@ public class Robot extends IterativeRobot {
 		AutoChooser.addObject("AutoLowBar", AutoLowBar);
 		AutoChooser.addObject("PIDMoveForward", PIDMoveForward);
 		AutoChooser.addObject("PIDTurn", PIDTurn);
+		AutoChooser.addObject("AutoTurnTest", AutoTurnTest);
 		smartdashboard.putData("Auto Mode Chooser", AutoChooser);
 		Scheduler.getInstance().run();
 	}
@@ -132,7 +136,6 @@ public class Robot extends IterativeRobot {
 	   	AutoChooser.initTable(AutoChooser.getTable());
 	   	AutoCommand = (Command) AutoChooser.getSelected();
 	   	AutoCommand.start();
-	   	intake.enable();
 	    drivetrain.resetEncoders();
 	   	drivetrain.shiftUp();
     }
@@ -141,8 +144,9 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-    	//RobotMap.CamAngle = SmartDashboard.getNumber("CameraAngle", 0);
-        //RobotMap.CamDirection = SmartDashboard.getNumber("Direction", 0);
+    	RobotMap.CamAngle = SmartDashboard.getNumber("CameraAngle", 0);
+        RobotMap.CamDirection = SmartDashboard.getNumber("Direction", 0);
+        SmartDashboard.putNumber("Gyro", drivetrain.getAngle());
         Scheduler.getInstance().run();
     }
 
@@ -175,14 +179,23 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         //System.out.println("LENC:" + drivetrain.getLeftEncoder() + "         " + "RENC" + drivetrain.getRightEncoder());
+        //System.out.println("AvgEncoder: "+DriveTrain.getAvgEncoder());
         //System.out.println("Angle: " + drivetrain.getAngle());
 /*-----------------------------------------Operator Controls-----------------------------------------*/
         //Drivetrain
         //Arcade drive with reversible toggle
-        if (OI.getRightBumper1()){
-        	drivetrain.arcadeDriveReverse(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1());
+        if (OI.getRightTrigger1()){
+        	if (OI.getRightBumper1()){
+            	drivetrain.arcadeDriveReverse(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1());
+            }
+            else drivetrain.arcadeDrive(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1());
         }
-        else drivetrain.arcadeDrive(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1());
+        else {
+        	if(OI.getButtonA1()){
+        		Scheduler.getInstance().add(AutoTurnTest);
+        	}
+        }
+        
         
         //Tank drive with reversible toggle
         //drivetrain.tankDrive(OI.getLeftY1(),OI.getRightY1());
@@ -205,7 +218,6 @@ public class Robot extends IterativeRobot {
      	//Automatic Ball Actuators
      //   System.out.println("isWinched " + Shooter.isWinched());
         //if (Shooter.isWinched() && !ShootnLoad.isRunning())
-        	OI.buttonA1.whenPressed(PIDTurn);
         	//Scheduler.getInstance().add(EngageBallActuators);
         
         //Intake

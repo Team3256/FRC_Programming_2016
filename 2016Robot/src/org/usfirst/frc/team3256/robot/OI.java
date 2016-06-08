@@ -29,6 +29,9 @@ public class OI {
 		public static Button leftStickButton1 = new JoystickButton(joystick1, 9);
 		public static Button rightStickbutton1 = new JoystickButton(joystick1, 10);
 		
+		public static boolean getButtonA1(){
+			return joystick1.getRawButton(1);
+		}
 		public static boolean getButtonX1(){
 			return joystick1.getRawButton(3);
 		}
@@ -41,6 +44,7 @@ public class OI {
 		public static boolean getButtonRB1(){
 			return joystick1.getRawButton(6);
 		}
+		
 		public static boolean getY1() {return joystick1.getRawButton(4);}
 		public static boolean getRightBumper1(){return joystick1.getRawButton(6);}
 		public static double getLeftY1(){return joystick1.getRawAxis(1);}

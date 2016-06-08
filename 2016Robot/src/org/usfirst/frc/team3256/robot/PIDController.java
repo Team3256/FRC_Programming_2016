@@ -7,18 +7,23 @@ public class PIDController {
 	double kP;
 	double kI;
 	double kD;	
-	double error = 0;
-    double sumError = 0;
-    double changeError = 0;
-    double prevError = 0;
+	double error;
+    double sumError;
+    double changeError;
+    double prevError;
     double PID;
-    double PIDOutput;
-    double pi = 3.1415926535897932384626;
     
     public PIDController(double kP, double kI, double kD){
     	this.kP = kP;
     	this.kI = kI;
     	this.kD = kD;
+    }
+    
+    public void resetPID(){
+    	error=0;
+    	sumError=0;
+    	changeError=0;
+    	prevError=0;
     }
     
     public double getError(double current, double setpoint){
@@ -34,7 +39,6 @@ public class PIDController {
         D = kD * changeError;
         PID = P + I + D;
         prevError = error;
-        //System.out.println("Error" + error);
         if (PID > 1)
         	PID = 1;
         return PID;
