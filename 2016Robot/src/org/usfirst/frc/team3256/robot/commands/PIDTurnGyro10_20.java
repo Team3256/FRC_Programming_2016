@@ -2,6 +2,7 @@ package org.usfirst.frc.team3256.robot.commands;
 
 import org.usfirst.frc.team3256.robot.PIDController;
 import org.usfirst.frc.team3256.robot.Robot;
+import org.usfirst.frc.team3256.robot.RobotMap;
 import org.usfirst.frc.team3256.robot.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -18,17 +19,17 @@ public class PIDTurnGyro10_20 extends Command {
 	double final_angle;
 	PIDController pid;
 	
-    public PIDTurnGyro10_20(double degrees, double direction) {
+    public PIDTurnGyro10_20() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.drivetrain);
         setInterruptible(false);
-        this.degrees=degrees;
-        this.direction=direction;
         pid = new PIDController(0.015,0.0009,0.002);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+        this.degrees=SmartDashboard.getNumber("CameraAngle", 0);
+        this.direction=SmartDashboard.getNumber("Direction", 0);
     	DriveTrain.resetGyro();
     	pid.resetPID();
     }
@@ -37,11 +38,11 @@ public class PIDTurnGyro10_20 extends Command {
     protected void execute() {
     	output = pid.calculatePID(DriveTrain.getAngle(), degrees);
     	System.out.println("Angle: "+ DriveTrain.getAngle());
-    	if (direction==1){
+    	if (direction==0){
     		DriveTrain.setLeftMotorSpeed(-output);
         	DriveTrain.setRightMotorSpeed(-output);
     	}
-    	else if (direction==0){
+    	else if (direction==1){
     		DriveTrain.setLeftMotorSpeed(output);
     		DriveTrain.setRightMotorSpeed(output);
     	}
