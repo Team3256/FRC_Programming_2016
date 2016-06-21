@@ -5,40 +5,54 @@ import org.usfirst.frc.team3256.robot.Robot;
 import org.usfirst.frc.team3256.robot.RobotMap;
 import org.usfirst.frc.team3256.robot.subsystems.DriveTrain;
 
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class PIDTurnGyro10_20 extends Command {
+public class PIDTurnCamera extends Command {
 
-	double degrees;
 	double direction;
+	double init_direction;
+	double init_angle;
+	double input_angle;
 	double output;
-	double final_angle;
 	PIDController pid;
+	double kP,kI,kD;
 	
-    public PIDTurnGyro10_20() {
+    public PIDTurnCamera(double kP, double kI, double kD) {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.drivetrain);
         setInterruptible(false);
-        pid = new PIDController(0.015,0.0008,0.002);
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
+        pid = new PIDController(kP,kI,kD);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-        this.degrees=SmartDashboard.getNumber("CameraAngle", 0);
-        this.direction=SmartDashboard.getNumber("Direction", 0);
-    	DriveTrain.resetGyro();
+    	init_direction = SmartDashboard.getNumber("Direction", 0);
+        init_angle = SmartDashboard.getNumber("CameraAngle", 0);
     	pid.resetPID();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	output = pid.calculatePID(DriveTrain.getAngle(), degrees);
-    	System.out.println("Angle: "+ DriveTrain.getAngle());
-    	System.out.println("Dashboard Angle: " + SmartDashboard.getNumber("CameraAngle", 0));
+    	direction = SmartDashboard.getNumber("Direction", 0);
+    	double curr_cameraAngle = SmartDashboard.getNumber("CameraAngle", 0);
+    	if (init_direction != direction){
+    		input_angle = Math.abs(curr_cameraAngle + init_angle);
+    	}
+    	else
+    		input_angle = init_angle - curr_cameraAngle;
+    	output = Math.abs(pid.calculatePID(input_angle, init_angle));
+    	System.out.println("Setpoint: " + init_angle);
+    	System.out.println("Cam angle: " + curr_cameraAngle);
+    	System.out.println("Current: " + (input_angle));
+    	
     	if (direction==0){
     		DriveTrain.setLeftMotorSpeed(-output);
         	DriveTrain.setRightMotorSpeed(-output);
@@ -54,17 +68,14 @@ public class PIDTurnGyro10_20 extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return pid.getError(DriveTrain.getAngle(), degrees)<1;
+        return pid.getError(init_angle-SmartDashboard.getNumber("CameraAngle", 0), init_angle)<1;
     }
 
     // Called once after isFinished returns true
     protected void end() {
     	DriveTrain.setLeftMotorSpeed(0);
     	DriveTrain.setRightMotorSpeed(0);
-    	System.out.println("DONEEEEEEEE");
-        final_angle = DriveTrain.getAngle();
-        SmartDashboard.putNumber("Final Angle", final_angle);
-    }
+    	System.out.println("DONEEEEEEEE");}
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run

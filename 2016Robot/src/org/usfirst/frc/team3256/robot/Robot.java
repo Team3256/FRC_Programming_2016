@@ -3,6 +3,7 @@ package org.usfirst.frc.team3256.robot;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -69,7 +70,9 @@ public class Robot extends IterativeRobot {
     CommandGroup AutoDriveForward;
     CommandGroup AutoLowBar;
     CommandGroup AutoTurnTest;
-
+    CommandGroup AutoTurnCamTest;
+    Command PIDTurnCamera;
+    Preferences prefs;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -82,6 +85,8 @@ public class Robot extends IterativeRobot {
 		CameraServer USBCam = CameraServer.getInstance();
 		USBCam.setQuality(50);
 		USBCam.startAutomaticCapture("cam0");
+		
+	   	
 		
 		//subsystems
     	drivetrain = new DriveTrain();
@@ -113,6 +118,8 @@ public class Robot extends IterativeRobot {
 		AutoDoNothingCommand = new AutoDoNothingCommand();
 		AutoLowBar = new AutoLowBar();
 		AutoTurnTest=new AutoTurnTest();
+		AutoTurnCamTest = new AutoTurnCamTest();
+		
 		
 		//compressor
 		compressor.setClosedLoopControl(true);
@@ -128,6 +135,8 @@ public class Robot extends IterativeRobot {
 		AutoChooser.addObject("PIDMoveForward", PIDMoveForward);
 		AutoChooser.addObject("PIDTurn", PIDTurn);
 		AutoChooser.addObject("AutoTurnTest", AutoTurnTest);
+		AutoChooser.addObject("AutoTurnCamTest", AutoTurnCamTest);
+		AutoChooser.addObject("PIDTurnCam", PIDTurnCamera);
 		smartdashboard.putData("Auto Mode Chooser", AutoChooser);
 		Scheduler.getInstance().run();
 	}
@@ -170,7 +179,11 @@ public class Robot extends IterativeRobot {
      * You can use it to reset subsystems before shutting down.
      */
     public void disabledInit(){
-
+    	prefs = Preferences.getInstance();
+	   	double kP = prefs.getDouble("kP", 0.0);
+	   	double kI = prefs.getDouble("kI", 0.0);
+	   	double kD = prefs.getDouble("kD", 0.0);
+    	PIDTurnCamera = new PIDTurnCamera(kP,kI,kD);
     }
 
     /**

@@ -27,7 +27,7 @@ public class PIDController {
     }
     
     public double getError(double current, double setpoint){
-    	return setpoint - current;
+    	return Math.abs(setpoint - current);
     }
     
     public double calculatePID(double current, double setpoint) {
