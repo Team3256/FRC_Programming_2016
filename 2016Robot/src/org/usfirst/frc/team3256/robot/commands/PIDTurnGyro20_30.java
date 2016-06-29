@@ -2,7 +2,6 @@ package org.usfirst.frc.team3256.robot.commands;
 
 import org.usfirst.frc.team3256.robot.PIDController;
 import org.usfirst.frc.team3256.robot.Robot;
-import org.usfirst.frc.team3256.robot.RobotMap;
 import org.usfirst.frc.team3256.robot.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -11,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  *
  */
-public class PIDTurnGyro10_20 extends Command {
+public class PIDTurnGyro20_30 extends Command {
 
 	double degrees;
 	double direction;
@@ -19,11 +18,11 @@ public class PIDTurnGyro10_20 extends Command {
 	double final_angle;
 	PIDController pid;
 	
-    public PIDTurnGyro10_20() {
+    public PIDTurnGyro20_30() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.drivetrain);
         setInterruptible(false);
-        pid = new PIDController(0.015,0.0003,0.001);
+        pid = new PIDController(0.01,0.0004,0.0037);
     }
 
     // Called just before this Command runs the first time

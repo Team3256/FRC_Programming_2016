@@ -13,7 +13,7 @@ public class CatapultWinchAutomatic extends Command {
     public CatapultWinchAutomatic() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	setTimeout(2);
+    	setTimeout(2.5);
     	requires(Robot.shooter);
     	setInterruptible(false);
     }

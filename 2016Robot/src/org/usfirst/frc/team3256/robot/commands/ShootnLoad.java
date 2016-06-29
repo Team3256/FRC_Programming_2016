@@ -20,7 +20,7 @@ public class ShootnLoad extends CommandGroup {
     	
     	setInterruptible(false);
     	addSequential(new DisengageBallActuators());
-    	addSequential (new ShiftDown());
+    	addParallel (new ShiftDown());
     	addSequential(new ShootBall());
     	addSequential(new ReEngageWinch());
     	addParallel (new ShiftUp());

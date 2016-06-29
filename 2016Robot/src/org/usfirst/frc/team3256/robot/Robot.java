@@ -73,6 +73,8 @@ public class Robot extends IterativeRobot {
     CommandGroup AutoTurnCamTest;
     Command PIDTurnCamera;
     Preferences prefs;
+    boolean drive_status;
+    boolean pid_status;
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -117,7 +119,7 @@ public class Robot extends IterativeRobot {
 		ShootnLoad = new ShootnLoad();
 		AutoDoNothingCommand = new AutoDoNothingCommand();
 		AutoLowBar = new AutoLowBar();
-		AutoTurnTest=new AutoTurnTest();
+		//AutoTurnTest=new AutoTurnTest();
 		AutoTurnCamTest = new AutoTurnCamTest();
 		
 		
@@ -134,7 +136,7 @@ public class Robot extends IterativeRobot {
 		AutoChooser.addObject("AutoLowBar", AutoLowBar);
 		AutoChooser.addObject("PIDMoveForward", PIDMoveForward);
 		AutoChooser.addObject("PIDTurn", PIDTurn);
-		AutoChooser.addObject("AutoTurnTest", AutoTurnTest);
+		AutoChooser.addObject("AutoTurnTest", new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle",0), true));
 		AutoChooser.addObject("AutoTurnCamTest", AutoTurnCamTest);
 		AutoChooser.addObject("PIDTurnCam", PIDTurnCamera);
 		smartdashboard.putData("Auto Mode Chooser", AutoChooser);
@@ -197,39 +199,33 @@ public class Robot extends IterativeRobot {
 /*-----------------------------------------Operator Controls-----------------------------------------*/
         //Drivetrain
         //Arcade drive with reversible toggle
-        if (OI.getRightTrigger1()){
-        	if (OI.getRightBumper1()){
-            	drivetrain.arcadeDriveReverse(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1());
-            }
-            else drivetrain.arcadeDrive(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1());
+        if(OI.getButtonA1()){
+        	drive_status = false;
+        	pid_status = true;
+        	Scheduler.getInstance().add(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
         }
         else {
-        	if(OI.getButtonA1()){
-        		Scheduler.getInstance().add(AutoTurnTest);
-        	}
+        	drive_status = true;
+        	pid_status = false;
+        	if (OI.getRightBumper1()){
+            	drivetrain.arcadeDriveReverse(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1(),drive_status);
+            }
+            else drivetrain.arcadeDrive(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1(),drive_status);
         }
-        
         
         //Tank drive with reversible toggle
         //drivetrain.tankDrive(OI.getLeftY1(),OI.getRightY1());
         //drivetrain.tankDriveReversable(OI.getLeftY1(), OI.getRightY1(), OI.getRightBumper1());
-        
         //Shift Gears
         OI.leftBumper1.whenPressed(ShiftDown);
         OI.leftBumper1.whenReleased(ShiftUp);
         
-        //AutoAlign DO NOT USE
-        /*
-        if (OI.getButtonX1()){
-        	drivetrain.turnToGoal(RobotMap.CamAngle, RobotMap.CamDirection);
-        }
-        */
         //Shooting
         OI.rightBumper2.whenPressed(ShootnLoad);
         //OI.leftBumper2.whenPressed(CatapultWinchAutomatic);
         
      	//Automatic Ball Actuators
-     //   System.out.println("isWinched " + Shooter.isWinched());
+        //System.out.println("isWinched " + Shooter.isWinched());
         //if (Shooter.isWinched() && !ShootnLoad.isRunning())
         	//Scheduler.getInstance().add(EngageBallActuators);
         

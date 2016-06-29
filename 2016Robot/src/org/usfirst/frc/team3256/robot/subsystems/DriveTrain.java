@@ -158,8 +158,9 @@ public class DriveTrain extends Subsystem {
     		rightRear.set(-right);
     }
     //arcadedrive
-    public static void arcadeDrive(double throttle, double turn, boolean slow){
-    		if (Math.abs(throttle)<0.2) {
+    public void arcadeDrive(double throttle, double turn, boolean slow, boolean enabled){
+    	if (enabled){
+			if (Math.abs(throttle)<0.2) {
 	    		throttle = 0;
 	    	}
 	    	if (Math.abs(turn)<0.2) {
@@ -193,10 +194,12 @@ public class DriveTrain extends Subsystem {
 	    		rightFront.set(-right);
 	    		rightRear.set(-right);
 	    	}
-    	
+    	}
+    
     }
 
-    public static void arcadeDriveReverse(double throttle, double turn, boolean slow){
+    public void arcadeDriveReverse(double throttle, double turn, boolean slow, boolean enabled){
+    	if (enabled){
     		if (Math.abs(throttle)<0.2) {
 	    		throttle = 0;
 	    	}
@@ -233,6 +236,7 @@ public class DriveTrain extends Subsystem {
 	    		rightFront.set(-right);
 	    		rightRear.set(-right);
 	    	}
+    	}
 	
     }
     
