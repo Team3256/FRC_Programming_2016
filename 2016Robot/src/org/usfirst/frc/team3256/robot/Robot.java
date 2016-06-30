@@ -199,17 +199,21 @@ public class Robot extends IterativeRobot {
 /*-----------------------------------------Operator Controls-----------------------------------------*/
         //Drivetrain
         //Arcade drive with reversible toggle
+        //OI.buttonA1.whenPressed(new AutoTurnTest((int) SmartDashboard.getNumber("CameraAngle", 0), pid_status));
+        
         if(OI.getButtonA1()){
         	drive_status = false;
         	pid_status = true;
         	Scheduler.getInstance().add(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
         }
+        // Makes button A on controller one (driver controller) to adjust camera angle to get a straight shot
         else {
         	drive_status = true;
         	pid_status = false;
         	if (OI.getRightBumper1()){
             	drivetrain.arcadeDriveReverse(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1(),drive_status);
             }
+        
             else drivetrain.arcadeDrive(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1(),drive_status);
         }
         
