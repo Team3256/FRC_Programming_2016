@@ -40,12 +40,12 @@ public class Shooter extends Subsystem{
 	
 	//engages ball holding actuators
 	public static void engageBallActuators(){
-		ballActuator.set(DoubleSolenoid.Value.kForward);
+		ballActuator.set(DoubleSolenoid.Value.kReverse);
 	}
 	
 	//disengages ball holding actuators 
     public static void disengageBallActuators(){
-    	ballActuator.set(DoubleSolenoid.Value.kReverse);
+    	ballActuator.set(DoubleSolenoid.Value.kForward);
     } 
 	
 		

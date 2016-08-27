@@ -21,7 +21,7 @@ public class ShootBall extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	System.out.println("Shoot started");
-    	setTimeout(0.5);
+    	setTimeout(.5);
     	Shooter.disengageWinch();
     }
 

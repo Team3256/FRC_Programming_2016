@@ -182,18 +182,18 @@ public class DriveTrain extends Subsystem {
 	    	if (right < -1){
 	    		right = -1;
 	    	}
-	    	if (slow){
+	    	/*if (slow){
 	    		leftFront.set(left/2);
 	        	leftRear.set(left/2);
 	        	rightFront.set(-right/2);
 	        	rightRear.set(-right/2);
 	    	}
-	    	else{
+	    	else{*/
 	    		leftFront.set(left);
 	    		leftRear.set(left);
 	    		rightFront.set(-right);
 	    		rightRear.set(-right);
-	    	}
+	    	//}
     	}
     
     }
@@ -224,18 +224,18 @@ public class DriveTrain extends Subsystem {
 	    	if (right < -1){
 	    		right = -1;
 	    	}
-	    	if (slow){
+	    	/*if (slow){
 	    		leftFront.set(left/2);
 	    		leftRear.set(left/2);
 	    		rightFront.set(-right/2);
 	    		rightRear.set(-right/2);
-	    	}
-	    	else {
+	    	}*/
+	    	//else {
 	    		leftFront.set(left);
 	    		leftRear.set(left);
 	    		rightFront.set(-right);
 	    		rightRear.set(-right);
-	    	}
+	    	//}
     	}
 	
     }

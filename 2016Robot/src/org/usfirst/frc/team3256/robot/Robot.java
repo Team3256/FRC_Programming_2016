@@ -200,14 +200,14 @@ public class Robot extends IterativeRobot {
         //Drivetrain
         //Arcade drive with reversible toggle
         //OI.buttonA1.whenPressed(new AutoTurnTest((int) SmartDashboard.getNumber("CameraAngle", 0), pid_status));
-        
-        if(OI.getButtonA1()){
+      //  if(OI.getRightTrigger1()){
         	drive_status = false;
         	pid_status = true;
-        	Scheduler.getInstance().add(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
-        }
-        // Makes button A on controller one (driver controller) to adjust camera angle to get a straight shot
-        else {
+        	OI.buttonA1.whenActive(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
+        	//whenActive(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
+        	//Scheduler.getInstance().add(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
+        //}
+        /*else {
         	drive_status = true;
         	pid_status = false;
         	if (OI.getRightBumper1()){
@@ -215,7 +215,17 @@ public class Robot extends IterativeRobot {
             }
         
             else drivetrain.arcadeDrive(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1(),drive_status);
+        }*/
+        /*if (OI.getRightTrigger1()) {
+        	if (OI.getRightBumper1()){
+            	drivetrain.arcadeDriveReverse(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1(),true);
+            }
+            else drivetrain.arcadeDrive(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1(),true);
         }
+        if(OI.getButtonA1()){
+        	Scheduler.getInstance().add(new AutoTurnTest(((int)SmartDashboard.getNumber("CameraAngle", 0)),true));
+        }*/
+       // OI.buttonA1.whenPressed(new AutoTurnTest(((int)SmartDashboard.getNumber("CameraAngle", 0)),true));
         
         //Tank drive with reversible toggle
         //drivetrain.tankDrive(OI.getLeftY1(),OI.getRightY1());
@@ -238,7 +248,8 @@ public class Robot extends IterativeRobot {
         OI.buttonY2.whileHeld(IntakeOuttakeRollers);
         OI.buttonA2.whenReleased(IntakeStopRollers);
         OI.buttonY2.whenReleased(IntakeStopRollers);
-        
+        OI.leftBumper2.whenPressed(EngageBallActuators);
+        OI.leftBumper2.whenReleased(DisengageBallActuators);
         OI.buttonB2.whenPressed(IntakePosAuto);
         OI.buttonX2.whileHeld(IntakeIncrementIn);
         OI.buttonX2.whenReleased(IntakeStopPivot);

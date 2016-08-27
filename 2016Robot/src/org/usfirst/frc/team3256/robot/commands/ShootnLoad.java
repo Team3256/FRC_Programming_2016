@@ -18,13 +18,13 @@ public class ShootnLoad extends CommandGroup {
         //      addSequential(new Command2());
         // these will run in order.
     	
-    	setInterruptible(false);
+    	setInterruptible(true);
     	addSequential(new DisengageBallActuators());
-    	addParallel (new ShiftDown());
+    	addSequential (new ShiftDown());
     	addSequential(new ShootBall());
     	addSequential(new ReEngageWinch());
-    	addParallel (new ShiftUp());
     	addSequential(new CatapultWinchAutomatic());
+    	addSequential (new ShiftUp());
     	
     	// To run multiple commands at the same time,
         // use addParallel()

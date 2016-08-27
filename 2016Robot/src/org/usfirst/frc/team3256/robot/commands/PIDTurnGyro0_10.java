@@ -22,8 +22,10 @@ public class PIDTurnGyro0_10 extends Command {
     public PIDTurnGyro0_10() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.drivetrain);
-        setInterruptible(false);
-        pid = new PIDController(0.015,0.00083,0.001);
+        setInterruptible(true);
+        //0.06,0.003,0.0012
+        pid = new PIDController(0.081,0.0005,0.19);
+        //for high gear
     }
 
     // Called just before this Command runs the first time
@@ -64,6 +66,7 @@ public class PIDTurnGyro0_10 extends Command {
     	System.out.println("DONEEEEEEEE");
         final_angle = DriveTrain.getAngle();
         SmartDashboard.putNumber("Final Angle", final_angle);
+        output = 0;
     }
 
     // Called when another command which requires one or more of the same
