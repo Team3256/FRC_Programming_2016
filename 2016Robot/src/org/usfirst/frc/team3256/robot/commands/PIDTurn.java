@@ -34,8 +34,8 @@ public class PIDTurn extends Command {
 
     	current_degrees = DriveTrain.ticksToDegrees(DriveTrain.getAvgEncoder());
     	output = pid.calculatePID(current_degrees, degrees);
-    	DriveTrain.setLeftMotorSpeed(output);
-    	DriveTrain.setRightMotorSpeed(output);
+    	DriveTrain.setLeftMotorSpeed(-output);
+    	DriveTrain.setRightMotorSpeed(-output);
     	System.out.println("Current Degrees: "+ current_degrees +" " + "Current Ticks: " + DriveTrain.getAvgEncoder() +" "+ "Motor Ouptut: " + output + " " + "\n");
     	
     }

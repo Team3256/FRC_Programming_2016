@@ -6,8 +6,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
  */
 public class AutoTurnTest extends CommandGroup{
     public  AutoTurnTest(int current_angle, boolean enabled) {
-    	setInterruptible(true);
-    	addSequential(new WaitCommand(1));
+    	setInterruptible(false);
+    	//System.out.println("HIIIIII");
     	if (enabled){
     		switch (current_angle) {
     		/*case 2: 
@@ -68,7 +68,7 @@ public class AutoTurnTest extends CommandGroup{
     			addSequential(new PIDTurnGeneric(0.074, 0.0, 0.33, true));
     			break;
     		}
-    		addSequential(new ShootnLoad());
+    		//addSequential(new ShootnLoad());
     	}
     }
 }

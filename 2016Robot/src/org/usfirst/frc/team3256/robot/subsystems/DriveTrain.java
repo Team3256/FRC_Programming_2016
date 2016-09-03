@@ -78,14 +78,14 @@ public class DriveTrain extends Subsystem {
     
     //sets left sides motor power
     public static void setLeftMotorSpeed(double speed){
-    	leftFront.set(speed);
-    	leftRear.set(speed);
+    	leftFront.set(0.8*speed);
+    	leftRear.set(0.8*speed);
     }
 
     //sets right sides motor power
     public static void setRightMotorSpeed(double speed){
-    	rightFront.set(0.95*speed);
-    	rightRear.set(0.95*speed);
+    	rightFront.set(1*speed);
+    	rightRear.set(1*speed);
     }
     
     //gets right encoder value
@@ -160,10 +160,10 @@ public class DriveTrain extends Subsystem {
     //arcadedrive
     public void arcadeDrive(double throttle, double turn, boolean slow, boolean enabled){
     	if (enabled){
-			if (Math.abs(throttle)<0.2) {
+			if (Math.abs(throttle)<0.3) {
 	    		throttle = 0;
 	    	}
-	    	if (Math.abs(turn)<0.2) {
+	    	if (Math.abs(turn)<0.3) {
 	    		turn = 0;
 	    	}
 	    	
