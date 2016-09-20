@@ -78,8 +78,8 @@ public class DriveTrain extends Subsystem {
     
     //sets left sides motor power
     public static void setLeftMotorSpeed(double speed){
-    	leftFront.set(0.8*speed);
-    	leftRear.set(0.8*speed);
+    	leftFront.set(0.87*speed);
+    	leftRear.set(0.87*speed);
     }
 
     //sets right sides motor power
@@ -109,11 +109,11 @@ public class DriveTrain extends Subsystem {
     }
 
     public static double inchesToTicks(double distance){
-	    return (distance*101.68);
+	    return (distance*110);
     }
     
     public static double ticksToInches(double ticks){
-	    return (ticks/101.68);
+	    return (ticks/110);
     }
     
     public static double degreesToTicks(double degrees){
@@ -182,18 +182,18 @@ public class DriveTrain extends Subsystem {
 	    	if (right < -1){
 	    		right = -1;
 	    	}
-	    	/*if (slow){
+	    	if (slow){
 	    		leftFront.set(left/2);
 	        	leftRear.set(left/2);
 	        	rightFront.set(-right/2);
 	        	rightRear.set(-right/2);
 	    	}
-	    	else{*/
+	    	else{
 	    		leftFront.set(left);
 	    		leftRear.set(left);
 	    		rightFront.set(-right);
 	    		rightRear.set(-right);
-	    	//}
+	    	}
     	}
     
     }
@@ -224,18 +224,18 @@ public class DriveTrain extends Subsystem {
 	    	if (right < -1){
 	    		right = -1;
 	    	}
-	    	/*if (slow){
+	    	if (slow){
 	    		leftFront.set(left/2);
 	    		leftRear.set(left/2);
 	    		rightFront.set(-right/2);
 	    		rightRear.set(-right/2);
-	    	}*/
-	    	//else {
+	    	}
+	    	else {
 	    		leftFront.set(left);
 	    		leftRear.set(left);
 	    		rightFront.set(-right);
 	    		rightRear.set(-right);
-	    	//}
+	    	}
     	}
 	
     }

@@ -70,6 +70,8 @@ public class Robot extends IterativeRobot {
     CommandGroup AutoTurnCamTest;
     Command PIDTurnCamera;
     Command Autonomous;
+    Command EncoderTurn;
+    Command EncoderTurnTest;
     Preferences prefs;
     boolean drive_status;
     boolean pid_status;
@@ -116,6 +118,7 @@ public class Robot extends IterativeRobot {
 		//AutoTurnTest=new AutoTurnTest();
 		AutoTurnCamTest = new AutoTurnCamTest();
 		Autonomous = new Autonomous();
+		EncoderTurn = new EncoderTurn(0.175,0,0.07,false);
 		//compressor
 		compressor.setClosedLoopControl(true);
 		drivetrain.calibrateGyro();
@@ -131,7 +134,12 @@ public class Robot extends IterativeRobot {
 		AutoChooser.addObject("AutoTurnTest", new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle",0), true));
 		AutoChooser.addObject("PIDTurnCam", PIDTurnCamera);
 		AutoChooser.addObject("Auto", Autonomous);
+		AutoChooser.addObject("Encoder", EncoderTurn);
+		AutoChooser.addObject("Encoder_Turn", new EncoderTurnTest((int)SmartDashboard.getNumber("CameraAngle",0), true));
 		smartdashboard.putData("Auto Mode Chooser", AutoChooser);
+        SmartDashboard.putBoolean("isWinched", shooter.isWinched());
+        SmartDashboard.putBoolean("intake", intake.isIntakePosL());
+        SmartDashboard.putNumber("Gyro", drivetrain.getAngle());	
 		Scheduler.getInstance().run();
 	}
 
@@ -148,6 +156,7 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+    	RobotMap.CamAngle = SmartDashboard.getNumber("CameraAngle", 0);
         SmartDashboard.putNumber("Gyro", drivetrain.getAngle());
         Scheduler.getInstance().run();
     }
@@ -187,11 +196,11 @@ public class Robot extends IterativeRobot {
     	Scheduler.getInstance().run();
     	OI.buttonA1.whenActive(new TeleopTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), true));
         OI.rightBumper1.whenPressed(ShootnLoad);
-   }
+    }
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         //OI.buttonA1.whenPressed(new AutoTurnTest((int) SmartDashboard.getNumber("CameraAngle", 0), pid_status));
-        /*if(OI.getRightTrigger1()){
+        if(/*OI.getRightTrigger1()*/ false){
         	drive_status = false;
         	pid_status = true;
         	OI.buttonA1.whenActive(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
@@ -200,13 +209,14 @@ public class Robot extends IterativeRobot {
         }
         else {
         	drive_status = true;
-        	pid_status = false;*/
+        	pid_status = false;
+        
         	if (OI.getRightBumper1()){
             	drivetrain.arcadeDriveReverse(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1(),drive_status);
             }
         
             else drivetrain.arcadeDrive(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1(),drive_status);
-   //     }
+        }
         OI.leftBumper1.whenPressed(ShiftDown);
         OI.leftBumper1.whenReleased(ShiftUp);
         

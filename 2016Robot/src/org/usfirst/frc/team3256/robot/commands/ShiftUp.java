@@ -14,7 +14,7 @@ public class ShiftUp extends Command {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.drivetrain);
-    	setTimeout(1);
+    	setTimeout(0.5);
     }
 
     // Called just before this Command runs the first time

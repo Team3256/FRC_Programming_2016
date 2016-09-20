@@ -15,7 +15,7 @@ public class PIDTurn extends Command {
 	PIDController pid;
 	double output;
 	double current_degrees=0;
-	private final double kP = 0.007, kI = 0.00035, kD = 0.0032;
+	private final double kP = 0.05, kI = 0, kD = 0;
     public PIDTurn(double degrees) {
     	requires(Robot.drivetrain);
     	this.degrees=degrees;
@@ -31,13 +31,11 @@ public class PIDTurn extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-
     	current_degrees = DriveTrain.ticksToDegrees(DriveTrain.getAvgEncoder());
     	output = pid.calculatePID(current_degrees, degrees);
     	DriveTrain.setLeftMotorSpeed(-output);
     	DriveTrain.setRightMotorSpeed(-output);
-    	System.out.println("Current Degrees: "+ current_degrees +" " + "Current Ticks: " + DriveTrain.getAvgEncoder() +" "+ "Motor Ouptut: " + output + " " + "\n");
-    	
+    	System.out.println("Current Degrees: "+ current_degrees +" " + "Current Ticks: " + DriveTrain.getAvgEncoder() +" "+ "Motor Ouptut: " + output + " " + "\n");	
     }
 
     // Make this return true when this Command no longer needs to run execute()

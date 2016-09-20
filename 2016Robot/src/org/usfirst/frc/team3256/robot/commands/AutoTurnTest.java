@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoTurnTest extends CommandGroup{
     public  AutoTurnTest(int current_angle, boolean enabled) {
     	setInterruptible(false);
-    	//System.out.println("HIIIIII");
     	if (enabled){
     		switch (current_angle) {
     		/*case 2: 

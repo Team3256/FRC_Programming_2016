@@ -49,9 +49,9 @@ public class MoveFoward extends Command {
 		double distance_accel_l = time_accel_l*12*0.5;
 		leftTrajectoryGenerator = new TrajectoryGenerator(total_distance, vel_max_l, accel_max, time_accel_l, distance_accel_l, 50);
 		//Right Side needs to accelerate faster since the right side moves mechanically slower.
-		double time_accel_r = 11.5/accel_max;
-		double distance_accel_r=(time_accel_r*(11.5)*(0.5));
-		rightTrajectoryGenerator = new TrajectoryGenerator(total_distance, 11.5, accel_max, time_accel_r, distance_accel_r, 50);
+		double time_accel_r = 12/accel_max;
+		double distance_accel_r=(time_accel_r*(12)*(0.5));
+		rightTrajectoryGenerator = new TrajectoryGenerator(total_distance, 12, accel_max, time_accel_r, distance_accel_r, 50);
 		leftTrajectory = leftTrajectoryGenerator.getTrajectory();
 		rightTrajectory = rightTrajectoryGenerator.getTrajectory();
 		System.out.println(leftTrajectory.length);
@@ -63,7 +63,7 @@ public class MoveFoward extends Command {
 		DriveTrain.shiftUp();
 		//System.out.println(leftTrajectory.length);
 		leftDriveStraight = new MotionProfileController(leftTrajectory, 12.0, 0.01, 0.0, 0.0,0.0);
-		rightDriveStraight = new MotionProfileController(rightTrajectory, 11.5, 0.01, 0.0, 0.0,0.0);
+		rightDriveStraight = new MotionProfileController(rightTrajectory, 12, 0.01, 0.0, 0.0,0.0);
 		step=0;
 	}
 
@@ -78,8 +78,8 @@ public class MoveFoward extends Command {
 		if (right_speed < 0.0){
 			right_speed = 0.0;
 		}
-		DriveTrain.setLeftMotorSpeed(-parameter*right_speed);
-		DriveTrain.setRightMotorSpeed(parameter*left_speed);
+		DriveTrain.setLeftMotorSpeed(parameter*right_speed);
+		DriveTrain.setRightMotorSpeed(-parameter*left_speed);
 		step++;
 		/*time_current = Timer.getFPGATimestamp() - time_initial;
     	pos_current = ((Math.abs(DriveTrain.getLeftEncoder())+Math.abs(DriveTrain.getRightEncoder()))/2);
