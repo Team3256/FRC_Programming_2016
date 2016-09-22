@@ -37,6 +37,7 @@ public class MoveFoward extends Command {
 		requires(Robot.drivetrain);
 		this.error = error;
 		this.parameter = parameter;
+		setTimeout(1.5);
 		
 	}
 
@@ -103,7 +104,7 @@ public class MoveFoward extends Command {
 
 	// Make this return true when this Command no longer needs to run execute()
 	protected boolean isFinished() {
-		return leftDriveStraight.isFinished() && rightDriveStraight.isFinished();
+		return (leftDriveStraight.isFinished() && rightDriveStraight.isFinished())||isTimedOut();
 		/*time_current = Timer.getFPGATimestamp() - time_initial;
     	if (time_current > PIDController.getTimeTotal()){
     		return true;

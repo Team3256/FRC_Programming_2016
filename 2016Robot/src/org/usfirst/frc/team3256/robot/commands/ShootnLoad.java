@@ -17,7 +17,6 @@ public class ShootnLoad extends CommandGroup {
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
         // these will run in order.
-    	
     	setInterruptible(true);
     	addSequential(new DisengageBallActuators());
     	addSequential (new ShiftDown());

@@ -78,8 +78,8 @@ public class DriveTrain extends Subsystem {
     
     //sets left sides motor power
     public static void setLeftMotorSpeed(double speed){
-    	leftFront.set(0.87*speed);
-    	leftRear.set(0.87*speed);
+    	leftFront.set(0.88*speed);
+    	leftRear.set(0.88*speed);
     }
 
     //sets right sides motor power

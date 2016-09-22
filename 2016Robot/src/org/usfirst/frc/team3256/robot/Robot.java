@@ -140,6 +140,7 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putBoolean("isWinched", shooter.isWinched());
         SmartDashboard.putBoolean("intake", intake.isIntakePosL());
         SmartDashboard.putNumber("Gyro", drivetrain.getAngle());	
+        smartdashboard.putNumber("AVG ENC" , DriveTrain.getAvgEncoder());
 		Scheduler.getInstance().run();
 	}
 
@@ -200,14 +201,14 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         //OI.buttonA1.whenPressed(new AutoTurnTest((int) SmartDashboard.getNumber("CameraAngle", 0), pid_status));
-        if(/*OI.getRightTrigger1()*/ false){
+        /*if(OI.getRightTrigger1() false){
         	drive_status = false;
         	pid_status = true;
         	OI.buttonA1.whenActive(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
         	//whenActive(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
         	//Scheduler.getInstance().add(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
         }
-        else {
+        else {*/
         	drive_status = true;
         	pid_status = false;
         
@@ -216,7 +217,7 @@ public class Robot extends IterativeRobot {
             }
         
             else drivetrain.arcadeDrive(OI.getLeftY1(), OI.getRightX1(), OI.getRightTrigger1(),drive_status);
-        }
+        //}
         OI.leftBumper1.whenPressed(ShiftDown);
         OI.leftBumper1.whenReleased(ShiftUp);
         
@@ -240,6 +241,8 @@ public class Robot extends IterativeRobot {
         
         SmartDashboard.putBoolean("isWinched", shooter.isWinched());
         SmartDashboard.putBoolean("isLoaded", shooter.isLoaded());
+        System.out.println("Left Enc: "+ drivetrain.getLeftEncoder());
+        System.out.println("Right ENc"+ drivetrain.getRightEncoder());
         SmartDashboard.putNumber("Gyro", drivetrain.getAngle());	
     }
     

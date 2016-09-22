@@ -20,7 +20,7 @@ public class PIDMoveForward extends Command {
     	this.Pos=Pos;
     	setInterruptible(false);
     	pid=new PIDController(0.0105,0.0,0.0161);
-    	setTimeout(4);
+    	setTimeout(3.5);
     }
 
     // Called just before this Command runs the first time
@@ -32,8 +32,8 @@ public class PIDMoveForward extends Command {
     protected void execute() {
     	output = pid.calculatePID(DriveTrain.ticksToInches(DriveTrain.getRightEncoder()), Pos);
     	if (output >0.7) output = 0.7;
-    	DriveTrain.setLeftMotorSpeed(-output);
-    	DriveTrain.setRightMotorSpeed(output);
+    	DriveTrain.setLeftMotorSpeed(output);
+    	DriveTrain.setRightMotorSpeed(-output);
     }
 
     // Make this return true when this Command no longer needs to run execute()
