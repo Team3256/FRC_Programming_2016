@@ -24,7 +24,7 @@ public class Autonomous extends CommandGroup {
         ///addSequential(new DisengageBallActuators());
     	addSequential(new PIDTurn(25));
     	System.out.println("Ready to align");
-        addSequential(new AutoTurnTest((int) RobotMap.CamAngle,true));
+        addSequential(new PIDTurnGeneric());
         System.out.println("After align");
     	/*//addSequential(new EngageBallActuators());
         addSequential(new PIDMoveForward(150));

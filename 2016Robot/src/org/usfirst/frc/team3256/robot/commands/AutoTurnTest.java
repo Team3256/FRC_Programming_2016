@@ -8,7 +8,7 @@ public class AutoTurnTest extends CommandGroup{
     public  AutoTurnTest(int current_angle, boolean enabled) {
     	setInterruptible(true);
     	System.out.println("AUTOTURNTEST");
-    	if (enabled){
+    	/*if (enabled){
     		switch (current_angle) {
     		/*case 2: 
     			addSequential(new PIDTurnGeneric(0.1, 0.0003, 0.18, false));
@@ -18,7 +18,7 @@ public class AutoTurnTest extends CommandGroup{
     			break;
     		case 4:
     			addSequential(new PIDTurnGeneric(0.1, 0.0003, 0.18, false));
-    			break;*/
+    			break;
     		case 5:
     			addSequential(new PIDTurnGeneric(0.08, 0.0003, 0.2, false));
     			break;
@@ -69,6 +69,6 @@ public class AutoTurnTest extends CommandGroup{
     			break;
     		}
     		//addSequential(new ShootnLoad());
-    	}
+    	}*/
     }
 }

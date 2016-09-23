@@ -34,6 +34,7 @@ public class Robot extends IterativeRobot {
 	public static Shooter shooter;
 	public static NetworkTable networkTable;
 	public static SmartDashboard smartdashboard;
+	
     //DriveTrain
     Command ShiftUp;
     Command ShiftDown;

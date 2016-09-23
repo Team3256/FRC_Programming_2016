@@ -19,14 +19,73 @@ public class PIDTurnGeneric extends Command {
 	PIDController pid;
 	boolean cameraStop;
 	
-    public PIDTurnGeneric(double p, double i, double d, boolean cameraStop) {
+    public PIDTurnGeneric() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.drivetrain);
         setInterruptible(true);
         //0.06,0.003,0.0012
         //.1,.0001,.21
-        pid = new PIDController(p, i, d);
-        this.cameraStop = cameraStop;
+        switch ((int)SmartDashboard.getNumber("CameraAngle",0)) {
+		/*case 2: 
+			addSequential(new PIDTurnGeneric(0.1, 0.0003, 0.18, false));
+			break;
+		case 3: 
+			addSequential(new PIDTurnGeneric(0.1, 0.0003, 0.18, false));
+			break;
+		case 4:
+			addSequential(new PIDTurnGeneric(0.1, 0.0003, 0.18, false));
+			break;*/
+		case 5:
+			pid = new PIDController(0.08, 0.0003, 0.2);
+			break;
+		case 6:
+			pid = new PIDController(0.08, 0.0, 0.15);
+			break;
+		case 7:
+			pid = new PIDController(0.08, 0.0, 0.2);
+			break;
+		case 8:
+			pid = new PIDController(0.087, 0.0, 0.23);
+			break;
+		case 9:
+			pid = new PIDController(0.08, 0.0, 0.23);
+			break;
+		case 10:
+			pid = new PIDController(0.083, 0.0, 0.23);
+			break;
+		case 11:
+			pid = new PIDController(0.082, 0.0, 0.26);
+			break;
+		case 12:
+			pid = new PIDController(0.081, 0.0, 0.26);
+			break;
+		case 13:
+			pid = new PIDController(0.081, 0.0, 0.26);
+			break;
+		case 14:
+			pid = new PIDController(0.08, 0.0, 0.28);
+			break;
+		case 15:
+			pid = new PIDController(0.08, 0.0, 0.28);
+			break;
+		case 16:
+			pid = new PIDController(0.08, 0.0, 0.29);
+			break;
+		case 17:
+			pid = new PIDController(0.08, 0.0, 0.31);
+			break;
+		case 18:
+			pid = new PIDController(0.077, 0.0, 0.32);
+			break;
+		case 19:
+			pid = new PIDController(0.076, 0.0, 0.33);
+			break;
+		case 20:
+			pid = new PIDController(0.074, 0.0, 0.33);
+			break;
+		}
+        //pid = new PIDController(p, i, d);
+        //this.cameraStop = cameraStop;
         //for high gear
     }
 
