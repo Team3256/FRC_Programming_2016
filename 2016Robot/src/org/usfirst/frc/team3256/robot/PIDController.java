@@ -31,6 +31,7 @@ public class PIDController {
     }
     
     public double calculatePID(double current, double setpoint) {
+    	System.out.println("error: " + error + " P: " + P + " kP: " + kP);
         error = setpoint - current;
         sumError = sumError + error;
         changeError = (error-prevError);

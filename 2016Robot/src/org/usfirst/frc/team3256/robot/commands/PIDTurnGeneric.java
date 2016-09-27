@@ -23,8 +23,16 @@ public class PIDTurnGeneric extends Command {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.drivetrain);
         setInterruptible(true);
-        //0.06,0.003,0.0012
+        //pid = new PIDController(p, i, d);
+        //this.cameraStop = cameraStop;
+        //for high gear
+    }
+
+    // Called just before this Command runs the first time
+    protected void initialize() {
+    	//0.06,0.003,0.0012
         //.1,.0001,.21
+        System.out.println("////////////////////////////////////" + (int)SmartDashboard.getNumber("CameraAngle",0));
         switch ((int)SmartDashboard.getNumber("CameraAngle",0)) {
 		/*case 2: 
 			addSequential(new PIDTurnGeneric(0.1, 0.0003, 0.18, false));
@@ -83,28 +91,26 @@ public class PIDTurnGeneric extends Command {
 		case 20:
 			pid = new PIDController(0.074, 0.0, 0.33);
 			break;
+		default:
+			pid = new PIDController(0.08, 0.0, 0.28);
+			System.out.println("NO GOAL FOUND");
+			break;
 		}
-        //pid = new PIDController(p, i, d);
-        //this.cameraStop = cameraStop;
-        //for high gear
-    }
-
-    // Called just before this Command runs the first time
-    protected void initialize() {
-        this.degrees=SmartDashboard.getNumber("CameraAngle", 0);
+    	this.degrees=SmartDashboard.getNumber("CameraAngle", 0);
         this.direction=SmartDashboard.getNumber("Direction", 0);
     	DriveTrain.resetGyro();
-    	System.out.println("PID Turn STarted");
     	pid.resetPID();
+    	System.out.println("PID Turn Started; Angle: "+ degrees);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	output = pid.calculatePID(DriveTrain.getAngle(), degrees);
-    	if (output >=.7) output = .7; 
-    	System.out.println("PID TURN RUNNING");
+    	System.out.println("PID Val: " + pid.calculatePID(DriveTrain.getAngle(), degrees));
+    	if (output >=.6) output = .6; 
+    	System.out.println("PID TURN RUNNING; Angle: "+ degrees);
     	//System.out.println("Angle: "+ DriveTrain.getAngle());
-    	//System.out.println("Dashboard Angle: " + SmartDashboard.getNumber("CameraAngle", 0));
+    	//System.out.println("Dashboard Angle: " + Smartashboard.getNumber("CameraAngle", 0));
     	if (direction==0){
     		DriveTrain.setLeftMotorSpeed(-output);
         	DriveTrain.setRightMotorSpeed(-output);

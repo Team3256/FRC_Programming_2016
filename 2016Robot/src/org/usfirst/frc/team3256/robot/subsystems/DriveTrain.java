@@ -78,8 +78,8 @@ public class DriveTrain extends Subsystem {
     
     //sets left sides motor power
     public static void setLeftMotorSpeed(double speed){
-    	leftFront.set(0.88*speed);
-    	leftRear.set(0.88*speed);
+    	leftFront.set(0.92*speed);
+    	leftRear.set(0.92*speed);
     }
 
     //sets right sides motor power
@@ -183,10 +183,10 @@ public class DriveTrain extends Subsystem {
 	    		right = -1;
 	    	}
 	    	if (slow){
-	    		leftFront.set(left/2);
-	        	leftRear.set(left/2);
-	        	rightFront.set(-right/2);
-	        	rightRear.set(-right/2);
+	    		leftFront.set(left * 0.3);
+	        	leftRear.set(left * 0.3);
+	        	rightFront.set(-right * 0.3);
+	        	rightRear.set(-right * 0.3);
 	    	}
 	    	else{
 	    		leftFront.set(left);
@@ -224,18 +224,20 @@ public class DriveTrain extends Subsystem {
 	    	if (right < -1){
 	    		right = -1;
 	    	}
+	    	
 	    	if (slow){
-	    		leftFront.set(left/2);
-	    		leftRear.set(left/2);
-	    		rightFront.set(-right/2);
-	    		rightRear.set(-right/2);
+	    		leftFront.set(left * 0.3);
+	    		leftRear.set(left * 0.3);
+	    		rightFront.set(-right * 0.3);
+	    		rightRear.set(-right * 0.3);
 	    	}
-	    	else {
+	    	
+	    //	else {
 	    		leftFront.set(left);
 	    		leftRear.set(left);
 	    		rightFront.set(-right);
 	    		rightRear.set(-right);
-	    	}
+	    //	}
     	}
 	
     }

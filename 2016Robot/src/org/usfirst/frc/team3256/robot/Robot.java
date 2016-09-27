@@ -69,6 +69,7 @@ public class Robot extends IterativeRobot {
     CommandGroup AutoLowBar;
     CommandGroup AutoTurnTest;
     CommandGroup AutoTurnCamTest;
+    CommandGroup AutoNoLowBar;
     Command PIDTurnCamera;
     Command Autonomous;
     Command EncoderTurn;
@@ -101,10 +102,10 @@ public class Robot extends IterativeRobot {
 		ShiftDown = new ShiftDown();
 		IntakeIncrementIn = new IntakeIncrementIn();
 		IntakeIncrementOut = new IntakeIncrementOut();
-		IntakeStopPivot = new IntakeStopPivot();
 		IntakeIntakeRollers = new IntakeIntakeRollers();
 		IntakeOuttakeRollers = new IntakeOuttakeRollers();
 		IntakeStopRollers = new IntakeStopRollers();
+		IntakeStopPivot = new IntakeStopPivot();
 		IntakePosAuto = new IntakePosAuto();
 		ShootBall = new ShootBall();
 		ReEngageWinch = new ReEngageWinch();
@@ -119,6 +120,7 @@ public class Robot extends IterativeRobot {
 		//AutoTurnTest=new AutoTurnTest();
 		AutoTurnCamTest = new AutoTurnCamTest();
 		Autonomous = new Autonomous();
+		AutoNoLowBar = new AutonomousNoLowBar();
 		EncoderTurn = new EncoderTurn(0.175,0,0.07,false);
 		//compressor
 		compressor.setClosedLoopControl(true);
@@ -129,14 +131,15 @@ public class Robot extends IterativeRobot {
 
 	public void disabledPeriodic() {
 		AutoChooser.addDefault("AutoDoNothing", AutoDoNothingCommand);
-		AutoChooser.addObject("AutoLowBar", AutoLowBar);
-		AutoChooser.addObject("PIDMoveForward", PIDMoveForward);
-		AutoChooser.addObject("PIDTurn", PIDTurn);
-		AutoChooser.addObject("AutoTurnTest", new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle",0), true));
-		AutoChooser.addObject("PIDTurnCam", PIDTurnCamera);
-		AutoChooser.addObject("Auto", Autonomous);
-		AutoChooser.addObject("Encoder", EncoderTurn);
-		AutoChooser.addObject("Encoder_Turn", new EncoderTurnTest((int)SmartDashboard.getNumber("CameraAngle",0), true));
+		//AutoChooser.addObject("AutoLowBar", AutoLowBar);
+		//AutoChooser.addObject("PIDMoveForward", PIDMoveForward);
+		//AutoChooser.addObject("PIDTurn", PIDTurn);
+		AutoChooser.addObject("GoalAlign", new PIDTurnGeneric());
+		//AutoChooser.addObject("PIDTurnCam", PIDTurnCamera);
+		AutoChooser.addObject("AutoLowBar", Autonomous);
+		AutoChooser.addObject("AutoNowLowBar", AutoNoLowBar);
+		//AutoChooser.addObject("Encoder", EncoderTurn);
+		//AutoChooser.addObject("Encoder_Turn", new EncoderTurnTest((int)SmartDashboard.getNumber("CameraAngle",0), true));
 		smartdashboard.putData("Auto Mode Chooser", AutoChooser);
         SmartDashboard.putBoolean("isWinched", shooter.isWinched());
         SmartDashboard.putBoolean("intake", intake.isIntakePosL());
@@ -194,22 +197,19 @@ public class Robot extends IterativeRobot {
     /**
      * This function is called periodically during operator control
      */
-    public void teleopPeriodic1(){
-    	Scheduler.getInstance().run();
-    	OI.buttonA1.whenActive(new TeleopTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), true));
-        OI.rightBumper1.whenPressed(ShootnLoad);
-    }
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         //OI.buttonA1.whenPressed(new AutoTurnTest((int) SmartDashboard.getNumber("CameraAngle", 0), pid_status));
-        /*if(OI.getRightTrigger1() false){
+        /*
+        if(OI.getRightTrigger1() == false){
         	drive_status = false;
         	pid_status = true;
-        	OI.buttonA1.whenActive(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
+        	OI.buttonA1.whenActive(new PIDTurnGeneric());
         	//whenActive(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
         	//Scheduler.getInstance().add(new AutoTurnTest((int)SmartDashboard.getNumber("CameraAngle", 0), pid_status));
         }
-        else {*/
+        else {
+        */
         	drive_status = true;
         	pid_status = false;
         
@@ -232,6 +232,7 @@ public class Robot extends IterativeRobot {
         OI.leftBumper2.whenPressed(EngageBallActuators);
         OI.leftBumper2.whenReleased(DisengageBallActuators);
         OI.buttonB2.whenPressed(IntakePosAuto);
+        OI.buttonB2.whenReleased(IntakeStopPivot);
         OI.buttonX2.whileHeld(IntakeIncrementIn);
         OI.buttonX2.whenReleased(IntakeStopPivot);
         

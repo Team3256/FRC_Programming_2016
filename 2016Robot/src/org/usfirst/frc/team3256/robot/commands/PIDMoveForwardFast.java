@@ -9,43 +9,43 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class PIDTurn extends Command {
+public class PIDMoveForwardFast extends Command {
 
-	double degrees;
-	PIDController pid;
+	double Pos;
 	double output;
-	double current_degrees=0;
-	private final double kP = 0.05, kI = 0, kD = 0;
-    public PIDTurn(double degrees) {
+	PIDController pid;
+	
+    public PIDMoveForwardFast(double Pos) {
     	requires(Robot.drivetrain);
-    	this.degrees=degrees;
+    	this.Pos=Pos;
     	setInterruptible(false);
-    	pid = new PIDController(kP, kI, kD); //0.007,0.00035,0.0032
+    	pid=new PIDController(0.03,0.0,0.0161);
+    	setTimeout(2.5);
     }
+
     // Called just before this Command runs the first time
     protected void initialize() {
     	DriveTrain.resetEncoders();
-    	current_degrees = 0;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	current_degrees = DriveTrain.ticksToDegrees(DriveTrain.getAvgEncoder());
-    	output = pid.calculatePID(current_degrees, degrees);
-    	DriveTrain.setLeftMotorSpeed(-output);
+    	output = pid.calculatePID(DriveTrain.ticksToInches(DriveTrain.getRightEncoder()), Pos);
+    	if (output >0.7) output = 0.7;
+    	DriveTrain.setLeftMotorSpeed(output);
     	DriveTrain.setRightMotorSpeed(-output);
-    	System.out.println("Current Degrees: "+ current_degrees +" " + "Current Ticks: " + DriveTrain.getAvgEncoder() +" "+ "Motor Ouptut: " + output + " " + "\n");	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return pid.getError(current_degrees, degrees)<1.5;
+        return pid.getError(DriveTrain.ticksToInches(DriveTrain.getRightEncoder()), Pos)<1||isTimedOut();
     }
 
     // Called once after isFinished returns true
     protected void end() {
     	DriveTrain.setLeftMotorSpeed(0);
     	DriveTrain.setRightMotorSpeed(0);
+    	System.out.println("PIDMOVEFORWARD DONEEEEEEEEE");
     }
 
     // Called when another command which requires one or more of the same

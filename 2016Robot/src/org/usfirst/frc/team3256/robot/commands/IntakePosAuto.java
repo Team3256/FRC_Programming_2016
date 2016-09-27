@@ -15,7 +15,7 @@ public class IntakePosAuto extends Command {
         // eg. requires(chassis);
     	requires(Robot.intake);
     	setInterruptible(true);
-    	setTimeout(10);
+    	setTimeout(2);
     }
 
     // Called just before this Command runs the first time
@@ -29,7 +29,7 @@ public class IntakePosAuto extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return Intake.isIntakePosL() || Intake.isIntakePosR();
+        return Intake.isIntakePosL() || Intake.isIntakePosR() || isTimedOut();
     }
 
     // Called once after isFinished returns true

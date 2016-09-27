@@ -20,7 +20,7 @@ public class RobotMap {
 //-------------------------------PWM-------------------------------
 	//motors
 	public static final int leftFrontMotor = 2;
-	public static final int leftRearMotor = 3;
+	public static final int leftRearMotor = 4; //3
 	public static final int	rightFrontMotor = 0;//used to be port 2, then port 4;
 	public static final int	rightRearMotor = 6;//not doing anything
 	public static final int	intakePivotMotors = 8;
