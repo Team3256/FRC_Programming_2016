@@ -10,17 +10,9 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class PIDMoveForward extends Command {
-
-	double Pos;
-	double output;
-	PIDController pid;
 	
     public PIDMoveForward(double Pos) {
     	requires(Robot.drivetrain);
-    	this.Pos=Pos;
-    	setInterruptible(false);
-    	pid=new PIDController(0.0105,0.0,0.0161);
-    	setTimeout(3.5);
     }
 
     // Called just before this Command runs the first time
@@ -30,15 +22,12 @@ public class PIDMoveForward extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	output = pid.calculatePID(DriveTrain.ticksToInches(DriveTrain.getRightEncoder()), Pos);
-    	if (output >0.7) output = 0.7;
-    	DriveTrain.setLeftMotorSpeed(output);
-    	DriveTrain.setRightMotorSpeed(-output);
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return pid.getError(DriveTrain.ticksToInches(DriveTrain.getRightEncoder()), Pos)<1||isTimedOut();
+        return isTimedOut();
     }
 
     // Called once after isFinished returns true

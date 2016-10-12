@@ -10,36 +10,20 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class PIDTurn extends Command {
-
-	double degrees;
-	PIDController pid;
-	double output;
-	double current_degrees=0;
-	private final double kP = 0.05, kI = 0, kD = 0;
     public PIDTurn(double degrees) {
     	requires(Robot.drivetrain);
-    	this.degrees=degrees;
-    	setInterruptible(false);
-    	pid = new PIDController(kP, kI, kD); //0.007,0.00035,0.0032
     }
     // Called just before this Command runs the first time
     protected void initialize() {
-    	DriveTrain.resetEncoders();
-    	current_degrees = 0;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	current_degrees = DriveTrain.ticksToDegrees(DriveTrain.getAvgEncoder());
-    	output = pid.calculatePID(current_degrees, degrees);
-    	DriveTrain.setLeftMotorSpeed(-output);
-    	DriveTrain.setRightMotorSpeed(-output);
-    	System.out.println("Current Degrees: "+ current_degrees +" " + "Current Ticks: " + DriveTrain.getAvgEncoder() +" "+ "Motor Ouptut: " + output + " " + "\n");	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return pid.getError(current_degrees, degrees)<1.5;
+        return false;
     }
 
     // Called once after isFinished returns true
