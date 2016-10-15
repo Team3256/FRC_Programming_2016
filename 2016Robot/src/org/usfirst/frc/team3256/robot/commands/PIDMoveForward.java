@@ -10,9 +10,13 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class PIDMoveForward extends Command {
+	double distance;
 	
-    public PIDMoveForward(double Pos) {
+    public PIDMoveForward(double distance) {
     	requires(Robot.drivetrain);
+    	this.distance = distance;
+    	setInterruptible(false);
+    	setTimeout(2.5);
     }
 
     // Called just before this Command runs the first time
@@ -22,12 +26,14 @@ public class PIDMoveForward extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	
+    	System.out.println("Running");
+    	DriveTrain.setLeftMotorSpeed(0.6);
+    	DriveTrain.setRightMotorSpeed(0.6);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return isTimedOut();
+        return Math.abs(distance - DriveTrain.ticksToInches(DriveTrain.getRightEncoder())) < 1 || isTimedOut();
     }
 
     // Called once after isFinished returns true

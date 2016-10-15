@@ -15,22 +15,25 @@ public class Autonomous extends CommandGroup {
         setInterruptible(false);
         DriveTrain.resetGyro();
         DriveTrain.resetEncoders();
-        addSequential(new CatapultWinchAutomatic());
-        addSequential(new EngageBallActuators());
-        addSequential(new ShiftUp());
-        addSequential(new PIDMoveForwardFast(30));
-        addSequential(new IntakePosAuto());
-        addSequential(new PIDMoveForward(125));
-        addSequential(new DisengageBallActuators());
-    	addSequential(new PIDTurn(30));
+        //addSequential(new CatapultWinchAutomatic());
+        //addSequential(new EngageBallActuators());
+        //addSequential(new ShiftUp());
+        //addSequential(new PIDMoveForwardFast(30));
+        //addSequential(new IntakePosAuto());
+        //addSequential(new PIDMoveForward(5));
+        //addSequential(new DisengageBallActuators());
+    	//addSequential(new PIDTurn(30));
     	addSequential(new PIDMoveForward(40));
-    	addSequential(new WaitCommand(0.5));
+    	//addSequential(new WaitCommand(0.5));
     	System.out.println("Ready to align");
     	DriveTrain.resetGyro();
-        addSequential(new PIDTurnGeneric());
+        //addSequential(new PIDTurnGeneric());
         System.out.println("After align");
-    	addSequential(new WaitCommand(0.5));
-    	addSequential(new Shoot());
+    	//addSequential(new WaitCommand(0.5));
+    	//addSequential(new Shoot());
+    	
+    	
+    	
     	/*//addSequential(new EngageBallActuators());
         addSequential(new PIDMoveForward(150));
     	//addSequential(new DisengageBallActuators());
