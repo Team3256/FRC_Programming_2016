@@ -16,9 +16,9 @@ public class AutonomousNoLowBar extends CommandGroup {
         addSequential(new CatapultWinchAutomatic());
         addSequential(new EngageBallActuators());
         addSequential(new ShiftUp());
-        addSequential(new PIDMoveForwardFast(30));
+        addSequential(new PIDMoveForward(30, 0.6, 2.5));
         addSequential(new IntakePosAuto());
-        addSequential(new PIDMoveForward(125));
+        addSequential(new PIDMoveForward(125, 0.6, 2.5));
         addSequential(new DisengageBallActuators());
     }
 }

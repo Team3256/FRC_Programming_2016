@@ -96,7 +96,7 @@ public class Robot extends IterativeRobot {
 		shooter = new Shooter();
 	    //commands
 		MoveForward = new MoveFoward(90,1);
-		PIDMoveForward = new PIDMoveForward(180);
+		PIDMoveForward = new PIDMoveForward(180, 0.6, 2.5);
 		PIDTurn = new PIDTurn(90);
 		ShiftUp = new ShiftUp();
 		ShiftDown = new ShiftDown();
