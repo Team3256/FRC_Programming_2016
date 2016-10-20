@@ -29,13 +29,15 @@ public class PIDMoveForward extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	//System.out.println("Running");
-    	DriveTrain.setLeftMotorSpeed(speed);
+    	DriveTrain.setLeftMotorSpeed(speed*0.97/0.92);
     	DriveTrain.setRightMotorSpeed(-speed);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return distance < (DriveTrain.ticksToInches(DriveTrain.getRightEncoder())+distance/5+2)*0.92 || isTimedOut();
+        return distance < 1.132738142857*(DriveTrain.ticksToInches(DriveTrain.getRightEncoder()))+14.95237514286 || isTimedOut();
+        // used data points and found a regression line to accurately move forwad
+        // works for distance >= 40, doesn't work well for values less
     }
 
     // Called once after isFinished returns true

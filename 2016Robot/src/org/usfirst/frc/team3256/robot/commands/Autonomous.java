@@ -15,9 +15,11 @@ public class Autonomous extends CommandGroup {
         setInterruptible(false);
         DriveTrain.resetGyro();
         DriveTrain.resetEncoders();
-        int distance = 30;
-    	addSequential(new PIDMoveForward(distance, 0.25, 15));
-    	//addSequential(new PIDMoveForward(distance, 0.25, 10));
+        int distance = 130;
+        int degrees = 30;
+        addSequential(new CatapultWinch());
+    	addSequential(new PIDMoveForward(distance, 0.5, 10));
+        //addSequential(new PIDTurn(degrees));
     	System.out.println("Distance " + distance);
     	System.out.println("Ready to align");
     	DriveTrain.resetGyro();
